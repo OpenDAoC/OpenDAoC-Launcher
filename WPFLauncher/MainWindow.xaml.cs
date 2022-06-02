@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Windows;
+using Newtonsoft.Json;
 using WPFLauncher.Properties;
 
 namespace WPFLauncher
@@ -22,8 +24,9 @@ namespace WPFLauncher
             InitializeComponent();
             InitializeWorkers();
             CheckVersion();
-            // GetQuickCharacters();
+            GetQuickCharacters();
             InitializeSettings();
+            Activated += RefreshCount;
         }
 
         private void InitializeSettings()
@@ -78,6 +81,11 @@ namespace WPFLauncher
         {
             Process.Start(Constants.RegisterUrl);
         }        
+        
+        private void RefreshCount(object sender, EventArgs e)
+        {
+            GetPlayerCount();
+        }
 
         private void UpdateChecker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -144,12 +152,18 @@ namespace WPFLauncher
                 var quickRealmID = quickSplit[1].Trim();
                 var quickRealm = "";
 
-                if (quickRealmID == "Alb")
-                    quickRealm = "1";
-                else if (quickRealmID == "Mid")
-                    quickRealm = "2";
-                else
-                    quickRealm = "3";
+                switch (quickRealmID)
+                {
+                    case "Alb":
+                        quickRealm = "1";
+                        break;
+                    case "Mid":
+                        quickRealm = "2";
+                        break;
+                    default:
+                        quickRealm = "3";
+                        break;
+                }
 
                 quickSelection = quickToon + " " + quickRealm;
             }
@@ -175,10 +189,97 @@ namespace WPFLauncher
 
             if (!Settings.Default.KeepOpen) Environment.Exit(0);
         }
+        private void GetQuickCharacters()
+        {
+            var path = Environment.ExpandEnvironmentVariables(Constants.AppData) + Constants.UserPath;
+            if (!File.Exists(path)) return;
+
+            var userDat = File.ReadAllLines(path);
+            var quickCharacters = new List<string>();
+
+            foreach (var line in userDat)
+            {
+                if (line.Contains("setentry=")) continue;
+
+                if (!line.Contains("entry")) continue;
+                var entry = line.Split('=');
+                var entryData = entry[1].Split(',');
+                if (entryData[0] == "") continue;
+
+                var realm = "";
+
+                var entryRealm = entryData[4].Trim();
+
+                switch (entryRealm)
+                {
+                    case "1":
+                        realm = "Alb";
+                        break;
+                    case "2":
+                        realm = "Mid";
+                        break;
+                    default:
+                        realm = "Hib";
+                        break;
+                }
+
+                quickCharacters.Add(entryData[0] + " - " + realm);
+            }
+
+            QuickloginCombo.ItemsSource = quickCharacters;
+        }
+        
+        private void GetPlayerCount()
+        {
+            try
+            {
+                var webRequest = WebRequest.Create("https://api.atlasfreeshard.com/stats") as HttpWebRequest;
+
+                if (webRequest == null) return;
+                webRequest.ContentType = "application/json";
+                webRequest.UserAgent = "Nothing";
+
+                var response = webRequest.GetResponse();
+
+                using (var s = response.GetResponseStream())
+                {
+                    using (var sr = new StreamReader(s))
+                    {
+                        var jsonStats = sr.ReadToEnd();
+                        var stats = JsonConvert.DeserializeObject<Stats>(jsonStats);
+                        if (stats != null && stats.Albion < 10)
+                            AlbLabel.Content = "0" + stats.Albion;
+                        else
+                            AlbLabel.Content = stats?.Albion.ToString();
+                        if (stats != null && stats.Midgard < 10)
+                            MidLabel.Content = "0" + stats.Midgard;
+                        else
+                            MidLabel.Content = stats?.Midgard.ToString();
+                        if (stats != null && stats.Hibernia < 10)
+                            HibLabel.Content = "0" + stats.Hibernia;
+                        else
+                            HibLabel.Content = stats?.Hibernia.ToString();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                AlbLabel.Content = "N/A";
+                MidLabel.Content = "N/A";
+                HibLabel.Content = "N/A";
+            }
+        }
 
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
             new OptionsWindow().ShowDialog();
         }
+    }
+
+    internal class Stats
+    {
+        public int Albion { get; set; }
+        public int Midgard { get; set; }
+        public int Hibernia { get; set; }
     }
 }
