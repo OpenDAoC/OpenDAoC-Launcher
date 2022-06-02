@@ -8,10 +8,11 @@
         /// <summary>
         ///     Creates a new instance of the class File.
         /// </summary>
-        public FileData(string filename, string hash)
+        public FileData(string filename, string hash, string size)
         {
             FileName = filename;
             Hash = hash;
+            Size = size;
         }
 
         /// <summary>
@@ -23,5 +24,10 @@
         ///     The file name of the file.
         /// </summary>
         public string FileName { get; }
+        
+        /// <summary>
+        ///     The size of the file.
+        /// </summary>
+        public string Size { get; }
     }
 }
