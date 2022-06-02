@@ -102,16 +102,21 @@ namespace WPFLauncher
             _httpClient = new HttpClient();
             try
             {
+                var updateSelf = false;
                 var totalFiles = filesToDownload.Count;
                 foreach (var file in filesToDownload)
                 {
                     var data = _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName).Result;
+                    if (file.FileName.Contains("AtlasLauncher"))
+                    {
+                        updateSelf = true;
+                    }
                     new FileInfo(file.FileName).Directory?.Create();
                     File.WriteAllBytes(file.FileName, data);
                     _updateChecker.ReportProgress((int) (100 * (filesToDownload.IndexOf(file) + 1) / totalFiles));
                 }
                 Updater.SaveLocalVersion(Updater.GetVersion());
-                if (File.Exists(Constants.LauncherUpdaterName)) //handle self update https://andreasrohner.at/posts/Programming/C%23/A-platform-independent-way-for-a-C%23-program-to-update-itself/
+                if (updateSelf) //handle self update https://andreasrohner.at/posts/Programming/C%23/A-platform-independent-way-for-a-C%23-program-to-update-itself/
                     UpdateLauncher();
             }
             catch (Exception exception)
