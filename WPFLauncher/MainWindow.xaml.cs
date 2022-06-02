@@ -1,7 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Windows;
 using WPFLauncher.Properties;
@@ -20,8 +21,9 @@ namespace WPFLauncher
         {
             InitializeComponent();
             InitializeWorkers();
-            InitializeSettings();
             CheckVersion();
+            GetQuickCharacters();
+            InitializeSettings();
         }
 
         private void InitializeSettings()
@@ -35,6 +37,11 @@ namespace WPFLauncher
             {
                 PasswordBox.Password = Settings.Default.Password;
             }
+            if (Settings.Default.QuickCarachter != null)
+            {
+                QuickloginCombo.Text = Settings.Default.QuickCarachter;
+            }
+
         }
         
         private void InitializeWorkers()
@@ -108,20 +115,46 @@ namespace WPFLauncher
                 MessageBox.Show(Constants.MessageNoCredentials);
                 return false;
             }
+
+            if (!Settings.Default.SaveAccount) return true;
             Settings.Default.Username = UsernameBox.Text;
             Settings.Default.Password = PasswordBox.Password;
+            Settings.Default.QuickCarachter = QuickloginCombo.Text;
             Settings.Default.Save();
             return true;
         }
 
         private void BuildBat()
         {
+            var quick = QuickloginCombo.Text;
+            var quickSelection = "";
+            var serverIP = "";
+
+            if (quick != "")
+            {
+                var quickSplit = quick.Split('-');
+                var quickToon = quickSplit[0].Trim();
+                var quickRealmID = quickSplit[1].Trim();
+                var quickRealm = "";
+
+                if (quickRealmID == "Alb")
+                    quickRealm = "1";
+                else if (quickRealmID == "Mid")
+                    quickRealm = "2";
+                else
+                    quickRealm = "3";
+
+                quickSelection = quickToon + " " + quickRealm;
+            }
+
+            serverIP = Settings.Default.PTR ? Constants.PtrIP : Constants.LiveIP;
+
             TextWriter run = new StreamWriter("atlaslauncher.bat");
-            run.WriteLine("connect.exe game1127.dll " + Constants.LiveIP + " " + UsernameBox.Text + " " + PasswordBox.Password);
+            run.WriteLine("connect.exe game1127.dll " + serverIP + " " + UsernameBox.Text + " " + PasswordBox.Password + " " + quickSelection);
             run.Close();
         }
 
-        private void StartAtlas()
+        private static void StartAtlas()
         {
             var process = new Process
             {
@@ -141,8 +174,45 @@ namespace WPFLauncher
             {
                 MessageBox.Show(Constants.MessageReviewInstallation, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            
+            if (!Settings.Default.KeepOpen) Environment.Exit(0);
         }
+        private void GetQuickCharacters()
+        {
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                       "\\Electronic Arts\\Dark Age of Camelot\\Atlas\\user.dat";
+            if (!File.Exists(path)) return;
 
+            var userDat = File.ReadAllLines(path);
+            var quickCharacters = new List<string>();
+
+            foreach (var line in userDat)
+            {
+                if (line.Contains("setentry=")) continue;
+
+                if (line.Contains("entry"))
+                {
+                    var entry = line.Split('=');
+                    var entryData = entry[1].Split(',');
+                    if (entryData[0] == "") continue;
+
+                    var realm = "";
+
+                    var entryRealm = entryData[4].Trim();
+
+                    if (entryRealm == "1")
+                        realm = "Alb";
+                    else if (entryRealm == "2")
+                        realm = "Mid";
+                    else
+                        realm = "Hib";
+
+                    quickCharacters.Add(entryData[0] + " - " + realm);
+                }
+            }
+
+            QuickloginCombo.ItemsSource = quickCharacters;
+        }
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
             new OptionsWindow().ShowDialog();

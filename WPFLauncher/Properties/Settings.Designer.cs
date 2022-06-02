@@ -94,5 +94,17 @@ namespace WPFLauncher.Properties {
                 this["SaveAccount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string QuickCarachter {
+            get {
+                return ((string)(this["QuickCarachter"]));
+            }
+            set {
+                this["QuickCarachter"] = value;
+            }
+        }
     }
 }

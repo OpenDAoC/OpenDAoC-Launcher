@@ -29,7 +29,16 @@
         <Label x:Name="UsernameLabel" Grid.Column="1" Grid.Row="0" Content="Username" Foreground="White" Height="25" HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,-20,0,30"/>
         <PasswordBox x:Name="PasswordBox" Grid.Column="2" Grid.Row="0" Foreground="White" CaretBrush="White" Height="25" Width="100" HorizontalAlignment="Center" TextBlock.FontSize="12" Margin="0,35,0,30"/>
         <Label x:Name="PasswordLabel" Grid.Column="1" Grid.Row="0" Content="Password" Foreground="White" Height="25" HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,35,0,30"/>
-        <ComboBox x:Name="QuickloginCombo" Grid.Column="2" Grid.Row="0" Foreground="White" Height="25" Width="100" HorizontalAlignment="Center" TextBlock.FontSize="12"  Margin="0,90,0,30"/>
+        <ComboBox x:Name="QuickloginCombo" Grid.Column="2" Grid.Row="0" Foreground="White" Height="25" Width="100" HorizontalAlignment="Center" TextBlock.FontSize="12"  Margin="0,90,0,30">
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ComboBoxItem}">
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="Background" Value="White" />
+                    <Setter Property="BorderBrush" Value="White" />
+   
+                </Style>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
         <Label x:Name="QuickloginLabel" Grid.Column="1" Grid.Row="0" Content="Character" Foreground="White" Height="25" HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,90,0,30"/>
         <Button x:Name="PlayButton" Grid.Column="2" Grid.Row="1" Content="Play" HorizontalAlignment="Center" TextBlock.FontSize="18" TextBlock.FontWeight="bold"
                 Margin="0,0,0,10" Width="100" Height="40" Click="PlayButton_Click" ClickMode="Release" IsDefault="True" Background="{x:Null}" Foreground="#FFFFDE00" />
