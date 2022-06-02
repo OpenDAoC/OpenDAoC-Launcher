@@ -274,6 +274,11 @@ namespace WPFLauncher
         {
             new OptionsWindow().ShowDialog();
         }
+
+        private void PatchButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            new PatchNotesWindow().ShowDialog();
+        }
     }
 
     internal class Stats

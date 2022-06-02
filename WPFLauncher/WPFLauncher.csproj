@@ -70,6 +70,9 @@
     <Compile Include="OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PatchNotesWindow.xaml.cs">
+      <DependentUpon>PatchNotesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\File.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\IFile.cs" />
@@ -87,6 +90,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="OptionsWindow.xaml" />
+    <Page Include="PatchNotesWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
