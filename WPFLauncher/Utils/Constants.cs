@@ -4,9 +4,10 @@
     {
 
         public const string LauncherVersion = "1.0.0";
-        
+
         #region Patcher
-        
+
+        public const string RegisterUrl = "https://atlasl.ink/register";
         public const string RemoteVersionUrl = "https://patch.atlasfreeshard.com/version.txt";
         public const string RemoteFileList = "https://patch.atlasfreeshard.com/patchlist-new.txt"; //TODO change to production url
         public static string RemoteFilePath;

@@ -51,7 +51,7 @@ namespace WPFLauncher
             PlayButton.Content = _updateAvailable ? "Update" : "Play";
         }
 
-        private void playButton_Click(object sender, RoutedEventArgs e)
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             _updateAvailable = Updater.CheckForNewVersion();
             if (_updateAvailable)
@@ -66,7 +66,12 @@ namespace WPFLauncher
             }
 
         }
-        
+
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(Constants.RegisterUrl);
+        }        
+
         private void UpdateChecker_DoWork(object sender, DoWorkEventArgs e)
         {
             Thread.Sleep((int) e.Argument);
