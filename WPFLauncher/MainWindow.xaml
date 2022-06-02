@@ -63,7 +63,7 @@
                 TextBlock.FontSize="18" TextBlock.FontWeight="bold"
                 Margin="0,125,0,17" Width="130" Height="45" Click="PlayButton_Click" ClickMode="Release"
                 IsDefault="True" Background="{x:Null}" Foreground="#FFFFDE00" Grid.RowSpan="2" />
-        <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Center" Foreground="White" TextBlock.FontWeight="Medium" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="4" PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="0,0,0,5"></Label>
+        <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Center" Foreground="White" TextBlock.FontWeight="Medium" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="4" PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="0,0,0,2"></Label>
 
     </Grid>
 </Window>

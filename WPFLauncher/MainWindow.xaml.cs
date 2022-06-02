@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Windows;
 using Newtonsoft.Json;
@@ -52,9 +53,15 @@ namespace WPFLauncher
             _updateChecker = new BackgroundWorker();
             _updateChecker.DoWork += UpdateChecker_DoWork;
             _updateChecker.RunWorkerCompleted += UpdateChecker_RunWorkerCompleted;
+            _updateChecker.ProgressChanged += UpdateChecker_ProgressChanged;
             _updateChecker.WorkerReportsProgress = true;
         }
-        
+
+        private void UpdateChecker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            PlayButton.Content = $"{e.ProgressPercentage}%";
+        }
+
         private void CheckVersion()
         {
             _updateAvailable = Updater.CheckForNewVersion();
@@ -89,26 +96,41 @@ namespace WPFLauncher
 
         private void UpdateChecker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Thread.Sleep((int) e.Argument);
-            Dispatcher.Invoke(() =>
+            // Thread.Sleep((int) e.Argument);
+            // Dispatcher.Invoke(() =>
+            // {
+            //     Updater.DownloadUpdates();
+            // });
+            
+            var patchlist = Updater.GetPatchlist();
+            var filesToDownload = Updater.GetFilesToDownload(patchlist);
+            HttpClient _httpClient;
+            _httpClient = new HttpClient();
+            try
             {
-                Updater.DownloadUpdates();
-            });
+                var totalFiles = filesToDownload.Count;
+                foreach (var file in filesToDownload)
+                {
+                    if (file.FileName == "AtlasLauncher.exe") continue; //TODO handle self update https://andreasrohner.at/posts/Programming/C%23/A-platform-independent-way-for-a-C%23-program-to-update-itself/
+                    var data = _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName).Result;
+                    new FileInfo(file.FileName).Directory?.Create();
+                    File.WriteAllBytes(file.FileName, data);
+                    _updateChecker.ReportProgress((int) (100 * (filesToDownload.IndexOf(file) + 1) / totalFiles));
+                }
+                Updater.SaveLocalVersion(Updater.GetVersion());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(Constants.MessageDownloadError);
+            }
         }
 
         private void UpdateChecker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
-        { 
-            PlayButton.Content = "Play";
-            PlayButton.IsEnabled = true;
-            SaveLocalVersion(Updater.GetVersion());
-        }
-
-        private static void SaveLocalVersion(int version)
         {
-            Settings.Default.localVersion = version;
-            Settings.Default.Save();
+            PlayButton.Content = !Updater.CheckForNewVersion() ? "Play" : "Update";
+            PlayButton.IsEnabled = true;
         }
-
+        
         private void Play()
         {
             if (!CheckUserPass()) return;
@@ -262,7 +284,7 @@ namespace WPFLauncher
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 AlbLabel.Content = "N/A";
                 MidLabel.Content = "N/A";
