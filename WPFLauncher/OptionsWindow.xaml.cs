@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
+using System.Windows.Input;
 using WPFLauncher.Properties;
 
 namespace WPFLauncher
@@ -32,6 +34,13 @@ namespace WPFLauncher
             {
                 Settings.Default.SaveAccount = SaveAccountButton.IsChecked.Value;
             }
+            Settings.Default.Save();
+            Close();
+        }
+
+        private void ForcePatchButton_click(object sender, MouseButtonEventArgs e)
+        {
+            Settings.Default.localVersion = 0;
             Settings.Default.Save();
             Close();
         }

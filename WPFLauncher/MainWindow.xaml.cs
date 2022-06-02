@@ -73,7 +73,7 @@ namespace WPFLauncher
             _updateAvailable = Updater.CheckForNewVersion();
             if (_updateAvailable)
             {
-                PlayButton.Content = _updateAvailable ? "Updating.." : "Play";
+                PlayButton.Content = _updateAvailable ? "Checking.." : "Play";
                 PlayButton.IsEnabled = !_updateAvailable;
                 _updateChecker.RunWorkerAsync(2000);
             }
@@ -81,7 +81,6 @@ namespace WPFLauncher
             {
                 Play();
             }
-
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
@@ -92,6 +91,7 @@ namespace WPFLauncher
         private void RefreshCount(object sender, EventArgs e)
         {
             GetPlayerCount();
+            CheckVersion();
         }
 
         private void UpdateChecker_DoWork(object sender, DoWorkEventArgs e)

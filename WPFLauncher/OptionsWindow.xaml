@@ -65,7 +65,7 @@
 
 
         <Button x:Name="OptionSaveButton" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Content="Save" Background="{x:Null}" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.RowSpan="2" Click="OptionSaveButton_Click"></Button>
-        <Button x:Name="RepatchButton" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Content="Force re-patch" Height="20" Width="100" Background="{x:Null}" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.RowSpan="2" Click="OptionSaveButton_Click" BorderBrush="{x:Null}" TextBlock.FontSize="10"></Button>
+        <Label x:Name="RepatchButton" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Content="Force re-patch" Height="20" Width="100" Background="{x:Null}" Foreground="White" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" PreviewMouseLeftButtonDown="ForcePatchButton_click" TextBlock.FontSize="10" Cursor="Hand"></Label>
     </Grid>
 
 </Window>
