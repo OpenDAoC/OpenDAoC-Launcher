@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Windows;
 using Newtonsoft.Json;
 using WPFLauncher.Properties;
@@ -96,12 +96,6 @@ namespace WPFLauncher
 
         private void UpdateChecker_DoWork(object sender, DoWorkEventArgs e)
         {
-            // Thread.Sleep((int) e.Argument);
-            // Dispatcher.Invoke(() =>
-            // {
-            //     Updater.DownloadUpdates();
-            // });
-            
             var patchlist = Updater.GetPatchlist();
             var filesToDownload = Updater.GetFilesToDownload(patchlist);
             HttpClient _httpClient;
@@ -111,18 +105,38 @@ namespace WPFLauncher
                 var totalFiles = filesToDownload.Count;
                 foreach (var file in filesToDownload)
                 {
-                    if (file.FileName == "AtlasLauncher.exe") continue; //TODO handle self update https://andreasrohner.at/posts/Programming/C%23/A-platform-independent-way-for-a-C%23-program-to-update-itself/
                     var data = _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName).Result;
                     new FileInfo(file.FileName).Directory?.Create();
                     File.WriteAllBytes(file.FileName, data);
                     _updateChecker.ReportProgress((int) (100 * (filesToDownload.IndexOf(file) + 1) / totalFiles));
                 }
                 Updater.SaveLocalVersion(Updater.GetVersion());
+                if (File.Exists(Constants.LauncherUpdaterName)) //handle self update https://andreasrohner.at/posts/Programming/C%23/A-platform-independent-way-for-a-C%23-program-to-update-itself/
+                    UpdateLauncher();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 MessageBox.Show(Constants.MessageDownloadError);
             }
+        }
+
+        private static void UpdateLauncher()
+        {
+            var self = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+            using (var batFile = new StreamWriter (File.Create ( "AtlasLauncherUpdate.bat"))) {
+                    batFile.WriteLine ("@ECHO OFF");
+                    batFile.WriteLine ("TIMEOUT /t 1 /nobreak > NUL");
+                    batFile.WriteLine ("TASKKILL /IM \"{0}\" > NUL", "AtlasLauncher.exe");
+                    batFile.WriteLine ("MOVE \"{0}\" \"{1}\"", Constants.LauncherUpdaterName, "AtlasLauncher.exe");
+                    batFile.WriteLine ("DEL \"%~f0\" & START \"\" /B \"{0}\"", self);
+            }
+            var startInfo = new ProcessStartInfo("AtlasLauncherUpdate.bat");
+            startInfo.CreateNoWindow = true;
+            startInfo.UseShellExecute = false;
+            Process.Start (startInfo);
+
+            Environment.Exit(0);
         }
 
         private void UpdateChecker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
@@ -195,9 +209,6 @@ namespace WPFLauncher
             var command = "connect.exe game1127.dll " + serverIP + " " + UsernameBox.Text + " " + PasswordBox.Password +
                           " " + quickSelection;
             StartAtlas(command);
-            // TextWriter run = new StreamWriter("atlaslauncher.bat");
-            // run.WriteLine("connect.exe game1127.dll " + serverIP + " " + UsernameBox.Text + " " + PasswordBox.Password + " " + quickSelection);
-            // run.Close();
         }
 
         private static void StartAtlas(string command)
@@ -244,11 +255,10 @@ namespace WPFLauncher
                         realm = "Hib";
                         break;
                 }
-
                 quickCharacters.Add(entryData[0] + " - " + realm);
             }
 
-            QuickloginCombo.ItemsSource = quickCharacters;
+            QuickloginCombo.ItemsSource = quickCharacters.Distinct();
         }
         
         private void GetPlayerCount()

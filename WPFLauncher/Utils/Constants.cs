@@ -6,7 +6,8 @@
         public const string LauncherVersion = "1.0.0";
 
         #region Patcher
-
+        
+        public const string LauncherUpdaterName = "AtlasLauncher_Update.exe";
         public const string AppData = @"%AppData%\";
         public const string UserPath = "\\Electronic Arts\\Dark Age of Camelot\\Atlas\\user.dat";
         public const string RegisterUrl = "https://atlasl.ink/register";
