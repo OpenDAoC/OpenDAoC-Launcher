@@ -205,7 +205,7 @@ namespace WPFLauncher
             ProcessStartInfo ProcessInfo;
             Process AtlasProcess;
             ProcessInfo = new ProcessStartInfo("cmd.exe", "/K " + command);
-            ProcessInfo.CreateNoWindow = true;
+            ProcessInfo.WindowStyle = ProcessWindowStyle.Hidden;
             ProcessInfo.UseShellExecute = true;
             AtlasProcess = Process.Start(ProcessInfo);
 
