@@ -14,7 +14,7 @@
             <ColumnDefinition Width="100*" />
 
         </Grid.ColumnDefinitions>
-        <Button x:Name="PlayButton" Grid.Column="2" Content="Update" HorizontalAlignment="Left" Height="29"
+        <Button x:Name="PlayButton" Grid.Column="2" Content="Play" HorizontalAlignment="Left" Height="29"
                 Margin="12,121,0,0" VerticalAlignment="Top" Width="72" Click="playButton_Click" ClickMode="Release"
                 Background="#FFDDDDDD" IsDefault="True" />
 

@@ -7,22 +7,18 @@ namespace WPFLauncher
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool _updateAvailable;
         public MainWindow()
         {
             InitializeComponent();
+            _updateAvailable = Updater.CheckForNewVersion();
+            PlayButton.Content = _updateAvailable ? "Update" : "Play";
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Utils.CheckForNewVersion())
-            {
-                PlayButton.Content = "Downloading...";
-                if (Utils.DownloadUpdates()) PlayButton.Content = "Play";
-            }
-            else
-            {
-                PlayButton.Content = "Play";
-            }
+            if (_updateAvailable)
+                Updater.DownloadUpdates();
         }
     }
 }

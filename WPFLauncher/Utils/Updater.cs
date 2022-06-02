@@ -11,7 +11,7 @@ using WPFLauncher.Properties;
 
 namespace WPFLauncher
 {
-    public class Utils
+    public class Updater
     {
         private static int GetVersion()
         {
