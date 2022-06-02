@@ -41,9 +41,9 @@ namespace WPFLauncher
             {
                 PasswordBox.Password = Settings.Default.Password;
             }
-            if (Settings.Default.QuickCarachter != "")
+            if (Settings.Default.QuickCharacter != "")
             {
-                QuickloginCombo.Text = Settings.Default.QuickCarachter;
+                QuickloginCombo.Text = Settings.Default.QuickCharacter;
             }
 
         }
@@ -163,13 +163,13 @@ namespace WPFLauncher
             {
                 Settings.Default.Username = UsernameBox.Text;
                 Settings.Default.Password = PasswordBox.Password;
-                Settings.Default.QuickCarachter = QuickloginCombo.Text;
+                Settings.Default.QuickCharacter = QuickloginCombo.Text;
             }
             else
             {
                 Settings.Default.Username = "";
                 Settings.Default.Password = "";
-                Settings.Default.QuickCarachter = "";
+                Settings.Default.QuickCharacter = "";
             }
             Settings.Default.Save();
             return true;

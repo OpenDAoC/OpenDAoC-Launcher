@@ -98,12 +98,12 @@ namespace WPFLauncher.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string QuickCarachter {
+        public string QuickCharacter {
             get {
-                return ((string)(this["QuickCarachter"]));
+                return ((string)(this["QuickCharacter"]));
             }
             set {
-                this["QuickCarachter"] = value;
+                this["QuickCharacter"] = value;
             }
         }
     }

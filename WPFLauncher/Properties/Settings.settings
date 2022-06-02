@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WPFLauncher.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
@@ -20,8 +20,9 @@
     <Setting Name="SaveAccount" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="QuickCarachter" Type="System.String" Scope="User">
+    <Setting Name="QuickCharacter" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
+
