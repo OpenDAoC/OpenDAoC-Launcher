@@ -39,9 +39,10 @@ namespace WPFLauncher
                 .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             Constants.RemoteFilePath = patchlistByLine[0];
 
-            for (var i = 1; i < patchlistByLine.Length; i += 2)
+            for (var i = 1; i < patchlistByLine.Length; i ++)
             {
-                var file = new FileData(patchlistByLine[i], patchlistByLine[i + 1]);
+                var line = patchlistByLine[i].Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
+                var file = new FileData(line[0], line[1], line[2]);
                 remotePatchlist.Add(file);
             }
 
