@@ -83,7 +83,7 @@ namespace AtlasPatcher.Lister
 
         public string GetFileData(string File)
         {
-            return File + "\n" + GeneratedHashFromFile(File);
+            return File + "\t" + GeneratedHashFromFile(File) + "\t" + GeneratedFileSize(File);
         }
 
         public string GeneratedHashFromFile(string filename) {
@@ -91,6 +91,12 @@ namespace AtlasPatcher.Lister
                 using (FileStream fileStream = File.OpenRead(filename)) {
                     return NormalizeMd5(md5.ComputeHash(fileStream));
                 }
+            }
+        }
+        
+        public string GeneratedFileSize(string filename) {
+            using (FileStream fileStream = File.OpenRead(filename)) {
+                return fileStream.Length.ToString();
             }
         }
         
