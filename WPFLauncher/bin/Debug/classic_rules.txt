@@ -1,0 +1,11 @@
+You have chosen to play on one of the servers that Mythic Entertainment has specifically designated as a Non-Trials of Atlantis and Ranged Concentration Buff Server.  This server differs from the standard DAoC servers in the following ways:
+
+
+ - Players cannot access the lands of Atlantis on this server.  All abilities and items that require the Trials of Atlantis Expansion are not available.
+
+ - All concentration buffs on this server are set at a range of 5000 maximum units, and are available only to the caster and members of the casters group.
+
+ - There is no /level 20 available on this server.
+
+
+All rules from the DAoC Rules of Conduct apply to this server.  Welcome to the Classic Server, and have fun playing Dark Age of Camelot!
