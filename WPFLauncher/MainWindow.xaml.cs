@@ -22,22 +22,22 @@ namespace WPFLauncher
             InitializeComponent();
             InitializeWorkers();
             CheckVersion();
-            GetQuickCharacters();
+            // GetQuickCharacters();
             InitializeSettings();
         }
 
         private void InitializeSettings()
         {
             LauncherWindow.Title = "Atlas Launcher v" + Constants.LauncherVersion;
-            if (Settings.Default.Username != null)
+            if (Settings.Default.Username != "")
             {
                 UsernameBox.Text = Settings.Default.Username;
             }
-            if (Settings.Default.Password != null)
+            if (Settings.Default.Password != "")
             {
                 PasswordBox.Password = Settings.Default.Password;
             }
-            if (Settings.Default.QuickCarachter != null)
+            if (Settings.Default.QuickCarachter != "")
             {
                 QuickloginCombo.Text = Settings.Default.QuickCarachter;
             }
@@ -105,7 +105,6 @@ namespace WPFLauncher
         {
             if (!CheckUserPass()) return;
             BuildBat();
-            StartAtlas();
         }
         
         private bool CheckUserPass()
@@ -115,11 +114,19 @@ namespace WPFLauncher
                 MessageBox.Show(Constants.MessageNoCredentials);
                 return false;
             }
-
-            if (!Settings.Default.SaveAccount) return true;
-            Settings.Default.Username = UsernameBox.Text;
-            Settings.Default.Password = PasswordBox.Password;
-            Settings.Default.QuickCarachter = QuickloginCombo.Text;
+            
+            if (Settings.Default.SaveAccount)
+            {
+                Settings.Default.Username = UsernameBox.Text;
+                Settings.Default.Password = PasswordBox.Password;
+                Settings.Default.QuickCarachter = QuickloginCombo.Text;
+            }
+            else
+            {
+                Settings.Default.Username = "";
+                Settings.Default.Password = "";
+                Settings.Default.QuickCarachter = "";
+            }
             Settings.Default.Save();
             return true;
         }
@@ -149,70 +156,26 @@ namespace WPFLauncher
 
             serverIP = Settings.Default.PTR ? Constants.PtrIP : Constants.LiveIP;
 
-            TextWriter run = new StreamWriter("atlaslauncher.bat");
-            run.WriteLine("connect.exe game1127.dll " + serverIP + " " + UsernameBox.Text + " " + PasswordBox.Password + " " + quickSelection);
-            run.Close();
+            var command = "connect.exe game1127.dll " + serverIP + " " + UsernameBox.Text + " " + PasswordBox.Password +
+                          " " + quickSelection;
+            StartAtlas(command);
+            // TextWriter run = new StreamWriter("atlaslauncher.bat");
+            // run.WriteLine("connect.exe game1127.dll " + serverIP + " " + UsernameBox.Text + " " + PasswordBox.Password + " " + quickSelection);
+            // run.Close();
         }
 
-        private static void StartAtlas()
+        private static void StartAtlas(string command)
         {
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = "atlaslauncher.bat",
-                    UseShellExecute = true,
-                    CreateNoWindow = true
-                }
-            };
-            process.Start();
-            process.WaitForExit();
-            if (process.ExitCode == 0)
-            {
-            }
-            else
-            {
-                MessageBox.Show(Constants.MessageReviewInstallation, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            
+            ProcessStartInfo ProcessInfo;
+            Process AtlasProcess;
+            ProcessInfo = new ProcessStartInfo("cmd.exe", "/K " + command);
+            ProcessInfo.CreateNoWindow = true;
+            ProcessInfo.UseShellExecute = true;
+            AtlasProcess = Process.Start(ProcessInfo);
+
             if (!Settings.Default.KeepOpen) Environment.Exit(0);
         }
-        private void GetQuickCharacters()
-        {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                       "\\Electronic Arts\\Dark Age of Camelot\\Atlas\\user.dat";
-            if (!File.Exists(path)) return;
 
-            var userDat = File.ReadAllLines(path);
-            var quickCharacters = new List<string>();
-
-            foreach (var line in userDat)
-            {
-                if (line.Contains("setentry=")) continue;
-
-                if (line.Contains("entry"))
-                {
-                    var entry = line.Split('=');
-                    var entryData = entry[1].Split(',');
-                    if (entryData[0] == "") continue;
-
-                    var realm = "";
-
-                    var entryRealm = entryData[4].Trim();
-
-                    if (entryRealm == "1")
-                        realm = "Alb";
-                    else if (entryRealm == "2")
-                        realm = "Mid";
-                    else
-                        realm = "Hib";
-
-                    quickCharacters.Add(entryData[0] + " - " + realm);
-                }
-            }
-
-            QuickloginCombo.ItemsSource = quickCharacters;
-        }
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
             new OptionsWindow().ShowDialog();

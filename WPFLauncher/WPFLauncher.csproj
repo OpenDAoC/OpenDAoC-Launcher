@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>img\icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MaterialDesignColors, Version=2.0.7.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.0.7-ci195\lib\net462\MaterialDesignColors.dll</HintPath>
@@ -111,9 +114,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="img\button-pressed.png" />
-    <Content Include="img\button-unpressed.png" />
-    <Content Include="img\options-bg.png" />
+    <Resource Include="img\button-pressed.png" />
+    <Resource Include="img\button-unpressed.png" />
+    <Resource Include="img\options-bg.png" />
     <Resource Include="img\home-bg.png" />
     <Resource Include="img\icon.ico" />
     <Resource Include="img\logo.png" />
@@ -123,7 +126,7 @@
   <Import Project="..\packages\MaterialDesignThemes.4.6.0-ci195\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.6.0-ci195\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.6.0-ci195\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.6.0-ci195\build\MaterialDesignThemes.targets'))" />
   </Target>

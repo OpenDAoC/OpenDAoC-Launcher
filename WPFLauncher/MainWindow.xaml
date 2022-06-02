@@ -8,40 +8,52 @@
         HorizontalAlignment="Stretch" Icon="/img/icon.ico">
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="/img/home-bg.png" Stretch="UniformToFill"/>
+            <ImageBrush ImageSource="/img/home-bg.png" Stretch="UniformToFill" />
         </Grid.Background>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
 
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1.5*" />
-            <ColumnDefinition Width="1.3*" />
+            <ColumnDefinition Width="1.8*" />
 
         </Grid.ColumnDefinitions>
-        <Button x:Name="OptionsButton" Grid.Column="2" Content="OPTIONS" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,15,0" Height="20" Width="80"  Background="{x:Null}" Foreground="LightGray" BorderBrush="Gray" TextBlock.FontSize="8" Click="OptionsButton_Click"/>
-        <Button x:Name="RegisterButton" Grid.Column="1" Content="REGISTER" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,-30,0" Height="20" Width="80"  Background="{x:Null}" Foreground="LightGreen" BorderBrush="LightGreen" TextBlock.FontSize="8" Click="RegisterButton_Click"/>
+        <Button x:Name="OptionsButton" Grid.Column="2" Content="OPTIONS" HorizontalAlignment="Right"
+                VerticalAlignment="Top" Margin="0,10,15,0" Height="20" Width="80" Background="{x:Null}"
+                Foreground="LightGray" BorderBrush="Gray" TextBlock.FontSize="8" Click="OptionsButton_Click" />
+        <Button x:Name="RegisterButton" Grid.Column="1" Content="REGISTER" HorizontalAlignment="Right"
+                VerticalAlignment="Top" Margin="0,10,-50,0" Height="20" Width="80" Background="{x:Null}"
+                Foreground="LightGreen" BorderBrush="LightGreen" TextBlock.FontSize="10.5" Click="RegisterButton_Click" />
 
 
-        <TextBox x:Name="UsernameBox"  Grid.Column="2" Grid.Row="0" TextWrapping="Wrap" Foreground="White" CaretBrush="White" Height="25" TextBlock.FontSize="12" Width="100" Margin="0,-20,0,30"/>
-        <Label x:Name="UsernameLabel" Grid.Column="1" Grid.Row="0" Content="Username" Foreground="White" Height="25" HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,-20,0,30"/>
-        <PasswordBox x:Name="PasswordBox" Grid.Column="2" Grid.Row="0" Foreground="White" CaretBrush="White" Height="25" Width="100" HorizontalAlignment="Center" TextBlock.FontSize="12" Margin="0,35,0,30"/>
-        <Label x:Name="PasswordLabel" Grid.Column="1" Grid.Row="0" Content="Password" Foreground="White" Height="25" HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,35,0,30"/>
-        <ComboBox x:Name="QuickloginCombo" Grid.Column="2" Grid.Row="0" Foreground="White" Height="25" Width="100" HorizontalAlignment="Center" TextBlock.FontSize="12"  Margin="0,90,0,30">
+        <TextBox x:Name="UsernameBox" Grid.Column="2" Grid.Row="0" TextWrapping="Wrap" Foreground="White"
+                 CaretBrush="White" Height="25" TextBlock.FontSize="12" Width="130" Margin="0,-20,0,30" />
+        <Label x:Name="UsernameLabel" Grid.Column="1" Grid.Row="0" Content="Username" Foreground="White" Height="25"
+               HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,-20,0,30" />
+        <PasswordBox x:Name="PasswordBox" Grid.Column="2" Grid.Row="0" Foreground="White" CaretBrush="White"
+                     Height="25" Width="130" HorizontalAlignment="Center" TextBlock.FontSize="12" Margin="0,35,0,30" />
+        <Label x:Name="PasswordLabel" Grid.Column="1" Grid.Row="0" Content="Password" Foreground="White" Height="25"
+               HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,35,0,30" />
+        <ComboBox x:Name="QuickloginCombo" Grid.Column="2" Grid.Row="0" Foreground="White" Height="25" Width="130"
+                  HorizontalAlignment="Center" TextBlock.FontSize="12" Margin="0,90,0,30">
             <ComboBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ComboBoxItem}">
                     <Setter Property="Foreground" Value="Black" />
                     <Setter Property="Background" Value="White" />
                     <Setter Property="BorderBrush" Value="White" />
-   
+
                 </Style>
             </ComboBox.ItemContainerStyle>
         </ComboBox>
-        <Label x:Name="QuickloginLabel" Grid.Column="1" Grid.Row="0" Content="Character" Foreground="White" Height="25" HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,90,0,30"/>
-        <Button x:Name="PlayButton" Grid.Column="2" Grid.Row="1" Content="Play" HorizontalAlignment="Center" TextBlock.FontSize="18" TextBlock.FontWeight="bold"
-                Margin="0,0,0,10" Width="100" Height="40" Click="PlayButton_Click" ClickMode="Release" IsDefault="True" Background="{x:Null}" Foreground="#FFFFDE00" />
+        <Label x:Name="QuickloginLabel" Grid.Column="1" Grid.Row="0" Content="Character" Foreground="White" Height="25"
+               HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,90,0,30" />
+        <Button x:Name="PlayButton" Grid.Column="2" Grid.Row="1" Content="Play" HorizontalAlignment="Center"
+                TextBlock.FontSize="18" TextBlock.FontWeight="bold"
+                Margin="0,-15,0,10" Width="130" Height="50" Click="PlayButton_Click" ClickMode="Release"
+                IsDefault="True" Background="{x:Null}" Foreground="#FFFFDE00" />
 
     </Grid>
 </Window>
