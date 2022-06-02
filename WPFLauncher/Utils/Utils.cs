@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using WPFLauncher.Properties;
 
 namespace WPFLauncher
 {
@@ -24,7 +25,7 @@ namespace WPFLauncher
         public static bool CheckForNewVersion()
         {
             var version = GetVersion();
-            var currentVersion = Properties.Settings.Default.localVersion;
+            var currentVersion = Settings.Default.localVersion;
             return version > currentVersion;
         }
 
@@ -33,7 +34,8 @@ namespace WPFLauncher
             var remotePatchlist = new List<FileData>();
             var client = new WebClient();
             var data = client.DownloadData(Constants.RemoteFileList);
-            var patchlistByLine = Encoding.Default.GetString(data).Split(new [] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+            var patchlistByLine = Encoding.Default.GetString(data)
+                .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             Constants.RemoteFilePath = patchlistByLine[0];
 
             for (var i = 1; i < patchlistByLine.Length; i += 2)
@@ -41,14 +43,14 @@ namespace WPFLauncher
                 var file = new FileData(patchlistByLine[i], patchlistByLine[i + 1]);
                 remotePatchlist.Add(file);
             }
-            
+
             return remotePatchlist;
         }
 
         private static bool LocalFileExists(FileData file)
         {
             if (!File.Exists(file.FileName)) return false;
-            var localHash = GeneratedHashFromFile(file.FileName);
+            var localHash = CalculateHash(file.FileName);
             return localHash == file.Hash;
         }
 
@@ -76,34 +78,19 @@ namespace WPFLauncher
 
             return true;
         }
-        
-        public string GeneratedHashFromStream(Stream stream)
-        {
-            using (var md5 = MD5.Create())
-            {
-                return NormalizeMd5(md5.ComputeHash(stream));
-            }
-        }
 
-        /// <summary>
-        ///     Computes the md5 hash of the file with the received name and returns it as a string.
-        ///     Invokes <c>NormalizeMd5()</c> for the conversion.
-        /// </summary>
-        public static string GeneratedHashFromFile(string filename)
+        private static string CalculateHash(string filename)
         {
             using (var md5 = MD5.Create())
             {
                 using (var stream = File.OpenRead(filename))
                 {
-                    return NormalizeMd5(md5.ComputeHash(stream));
+                    return StringifyHash(md5.ComputeHash(stream));
                 }
             }
         }
 
-        /// <summary>
-        ///     Converts the <c>byte[]</c> md5 hash received into a string.
-        /// </summary>
-        private static string NormalizeMd5(byte[] md5)
+        private static string StringifyHash(byte[] md5)
         {
             return BitConverter.ToString(md5).Replace("-", "").ToLowerInvariant();
         }

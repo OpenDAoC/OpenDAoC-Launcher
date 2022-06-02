@@ -1,11 +1,9 @@
-﻿using WPFLauncher;
-using System.Windows;
-
+﻿using System.Windows;
 
 namespace WPFLauncher
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -18,14 +16,12 @@ namespace WPFLauncher
         {
             if (Utils.CheckForNewVersion())
             {
-                playButton.Content = "Downloading...";
-                if (Utils.DownloadUpdates())
-                {
-                    playButton.Content = "Play";
-                }
-            } else
+                PlayButton.Content = "Downloading...";
+                if (Utils.DownloadUpdates()) PlayButton.Content = "Play";
+            }
+            else
             {
-                playButton.Content = "Play";
+                PlayButton.Content = "Play";
             }
         }
     }
