@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows;
 using WPFLauncher.Properties;
 
 namespace WPFLauncher
@@ -67,16 +68,24 @@ namespace WPFLauncher
             var i = 0; //TODO remove
             HttpClient _httpClient;
             _httpClient = new HttpClient();
-            foreach (var file in filesToDownload)
+            try
             {
-                var data = _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName).Result;
-                File.WriteAllBytes(file.FileName, data);
-                //TODO debug stuff this needs to be removed
-                i++;
-                if (i > 10) break;
+                foreach (var file in filesToDownload)
+                {
+                    if (file.FileName == "AtlasLauncher.exe") continue; //TODO handle self update https://andreasrohner.at/posts/Programming/C%23/A-platform-independent-way-for-a-C%23-program-to-update-itself/
+                    var data = _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName).Result;
+                    File.WriteAllBytes(file.FileName, data);
+                    //TODO debug stuff this needs to be removed
+                    i++;
+                    if (i > 10) break;
+                }
+                return true;
             }
-
-            return true;
+            catch (Exception e)
+            {
+                MessageBox.Show(Constants.MessageDownloadError);
+                return false;
+            }
         }
 
         private static string CalculateHash(string filename)

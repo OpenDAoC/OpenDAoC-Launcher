@@ -6,5 +6,11 @@
         public const string RemoteFileList = "https://patch.atlasfreeshard.com/patchlist.txt";
 
         public static string RemoteFilePath;
+        
+        #region Messages
+        
+        public const string MessageDownloadError = "Error downloading files. Please try again later.";
+        
+        #endregion
     }
 }
