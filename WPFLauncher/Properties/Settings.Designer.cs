@@ -8,8 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-
 namespace WPFLauncher.Properties {
     
     
@@ -36,11 +34,13 @@ namespace WPFLauncher.Properties {
                 this["localVersion"] = value;
             }
         }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public String Username {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Username {
             get {
-                return ((String)(this["Username"]));
+                return ((string)(this["Username"]));
             }
             set {
                 this["Username"] = value;
@@ -49,12 +49,49 @@ namespace WPFLauncher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public String Password {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Password {
             get {
-                return ((String)(this["Password"]));
+                return ((string)(this["Password"]));
             }
             set {
                 this["Password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PTR {
+            get {
+                return ((bool)(this["PTR"]));
+            }
+            set {
+                this["PTR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool KeepOpen {
+            get {
+                return ((bool)(this["KeepOpen"]));
+            }
+            set {
+                this["KeepOpen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SaveAccount {
+            get {
+                return ((bool)(this["SaveAccount"]));
+            }
+            set {
+                this["SaveAccount"] = value;
             }
         }
     }

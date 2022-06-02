@@ -138,5 +138,9 @@ namespace WPFLauncher
             }
         }
 
+        private void OptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+            new OptionsWindow().ShowDialog();
+        }
     }
 }
