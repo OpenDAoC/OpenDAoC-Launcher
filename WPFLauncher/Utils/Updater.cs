@@ -13,7 +13,7 @@ namespace WPFLauncher
 {
     public class Updater
     {
-        private static int GetVersion()
+        public static int GetVersion()
         {
             var client = new WebClient();
             var stream = client.OpenRead(Constants.RemoteVersionUrl);
@@ -61,11 +61,22 @@ namespace WPFLauncher
             var filesToDownload = remotepatchList.Where(file => !LocalFileExists(file)).ToList();
             return filesToDownload;
         }
+        
+        private static int GetDownloadSize(List<FileData> filesToDownload)
+        {
+            var size = 0;
+            foreach (var file in filesToDownload)
+            {
+                size += int.Parse(file.Size);
+            }
+            return size;
+        }
 
         public static bool DownloadUpdates()
         {
             var patchlist = GetPatchlist();
             var filesToDownload = GetFilesToDownload(patchlist);
+            var downloadSize = GetDownloadSize(filesToDownload);
             var i = 0; //TODO remove
             HttpClient _httpClient;
             _httpClient = new HttpClient();
@@ -76,6 +87,7 @@ namespace WPFLauncher
                     if (file.FileName == "AtlasLauncher.exe") continue; //TODO handle self update https://andreasrohner.at/posts/Programming/C%23/A-platform-independent-way-for-a-C%23-program-to-update-itself/
                     var data = _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName).Result;
                     File.WriteAllBytes(file.FileName, data);
+                    downloadSize -= int.Parse(file.Size);
                     //TODO debug stuff this needs to be removed
                     i++;
                     if (i > 10) break;

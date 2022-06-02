@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Threading;
 using System.Windows;
+using WPFLauncher.Properties;
 
 namespace WPFLauncher
 {
@@ -16,7 +17,13 @@ namespace WPFLauncher
         {
             InitializeComponent();
             InitializeWorkers();
+            CheckVersion();
+        }
 
+        private void CheckVersion()
+        {
+            _updateAvailable = Updater.CheckForNewVersion();
+            PlayButton.Content = _updateAvailable ? "Update" : "Play";
         }
         private void InitializeWorkers()
         {
@@ -37,20 +44,36 @@ namespace WPFLauncher
             Dispatcher.Invoke(() =>
             {
                 PlayButton.Content = _updateAvailable ? "Updating.." : "Play";
+                PlayButton.IsEnabled = !_updateAvailable;
             });
 
-            if (!_updateAvailable) return;
-            Thread.Sleep((int) e.Argument);
-            Dispatcher.Invoke(() =>
+            if (_updateAvailable)
             {
-                Updater.DownloadUpdates();
-            });
+                Thread.Sleep((int) e.Argument);
+                Dispatcher.Invoke(() =>
+                {
+                    Updater.DownloadUpdates();
+                });
+            }
+            else
+            {
+                MessageBox.Show("Ready to play");
+            }
+
         }
-        
-        
+
         private void UpdateChecker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
         { 
             PlayButton.Content = "Play";
+            PlayButton.IsEnabled = true;
+            SaveLocalVersion(Updater.GetVersion());
         }
+
+        private static void SaveLocalVersion(int version)
+        {
+            Settings.Default.localVersion = version;
+            Settings.Default.Save();
+        }
+
     }
 }

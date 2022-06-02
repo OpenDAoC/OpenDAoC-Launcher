@@ -8,7 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle("AtlasLauncher")]
 [assembly: AssemblyDescription("The official launcher for DAoC Atlas")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Atlas Freeshard")]
+[assembly: AssemblyCompany("AtlasFreeshard")]
 [assembly: AssemblyProduct("AtlasLauncher")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
