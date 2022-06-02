@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
+
 namespace WPFLauncher.Properties {
     
     
@@ -32,6 +34,27 @@ namespace WPFLauncher.Properties {
             }
             set {
                 this["localVersion"] = value;
+            }
+        }
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public String Username {
+            get {
+                return ((String)(this["Username"]));
+            }
+            set {
+                this["Username"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public String Password {
+            get {
+                return ((String)(this["Password"]));
+            }
+            set {
+                this["Password"] = value;
             }
         }
     }
