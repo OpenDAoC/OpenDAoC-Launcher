@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace WPFLauncher
@@ -34,8 +35,7 @@ namespace WPFLauncher
             var data = client.DownloadData(Constants.RemoteFileList);
             var patchlistByLine = Encoding.Default.GetString(data).Split(new [] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             Constants.RemoteFilePath = patchlistByLine[0];
-            Console.WriteLine(Constants.RemoteFilePath);
-            
+
             for (var i = 1; i < patchlistByLine.Length; i += 2)
             {
                 var file = new FileData(patchlistByLine[i], patchlistByLine[i + 1]);
@@ -47,7 +47,9 @@ namespace WPFLauncher
 
         private static bool LocalFileExists(FileData file)
         {
-            return File.Exists(file.FileName);
+            if (!File.Exists(file.FileName)) return false;
+            var localHash = GeneratedHashFromFile(file.FileName);
+            return localHash == file.Hash;
         }
 
         private static List<FileData> GetFilesToDownload(List<FileData> remotepatchList)
@@ -56,21 +58,54 @@ namespace WPFLauncher
             return filesToDownload;
         }
 
-        public static void DownloadUpdates()
+        public static bool DownloadUpdates()
         {
-            if (!CheckForNewVersion()) return;
             var patchlist = GetPatchlist();
             var filesToDownload = GetFilesToDownload(patchlist);
-            var i = 0;
+            var i = 0; //TODO remove
             HttpClient _httpClient;
             _httpClient = new HttpClient();
             foreach (var file in filesToDownload)
             {
                 var data = _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName).Result;
                 File.WriteAllBytes(file.FileName, data);
+                //TODO debug stuff this needs to be removed
                 i++;
                 if (i > 10) break;
             }
+
+            return true;
+        }
+        
+        public string GeneratedHashFromStream(Stream stream)
+        {
+            using (var md5 = MD5.Create())
+            {
+                return NormalizeMd5(md5.ComputeHash(stream));
+            }
+        }
+
+        /// <summary>
+        ///     Computes the md5 hash of the file with the received name and returns it as a string.
+        ///     Invokes <c>NormalizeMd5()</c> for the conversion.
+        /// </summary>
+        public static string GeneratedHashFromFile(string filename)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    return NormalizeMd5(md5.ComputeHash(stream));
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Converts the <c>byte[]</c> md5 hash received into a string.
+        /// </summary>
+        private static string NormalizeMd5(byte[] md5)
+        {
+            return BitConverter.ToString(md5).Replace("-", "").ToLowerInvariant();
         }
     }
 }

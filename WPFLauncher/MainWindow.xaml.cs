@@ -18,7 +18,14 @@ namespace WPFLauncher
         {
             if (Utils.CheckForNewVersion())
             {
-                Utils.DownloadUpdates();
+                playButton.Content = "Downloading...";
+                if (Utils.DownloadUpdates())
+                {
+                    playButton.Content = "Play";
+                }
+            } else
+            {
+                playButton.Content = "Play";
             }
         }
     }
