@@ -312,7 +312,7 @@ namespace WPFLauncher
 
         private void PatchButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            new PatchNotesWindow().ShowDialog();
+            Process.Start(Constants.PatchNotesUrl);
         }
 
         private void GridBread_MouseDown(object sender, MouseButtonEventArgs e)

@@ -10,6 +10,7 @@
         public const string AppData = @"%AppData%\";
         public const string UserPath = "\\Electronic Arts\\Dark Age of Camelot\\Atlas\\user.dat";
         public const string RegisterUrl = "https://atlasl.ink/register";
+        public const string PatchNotesUrl = "https://atlasl.ink/patch-notes";
 
         public const string
             RemoteVersionUrl = "https://patch.atlasfreeshard.com/version-new.txt"; //TODO change to production url
