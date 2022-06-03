@@ -127,6 +127,7 @@ namespace WPFLauncher
                 batFile.WriteLine("TIMEOUT /t 1 /nobreak > NUL");
                 batFile.WriteLine("TASKKILL /IM \"{0}\" > NUL", "AtlasLauncher.exe");
                 batFile.WriteLine("MOVE \"{0}\" \"{1}\"", Constants.LauncherUpdaterName, "AtlasLauncher.exe");
+                batFile.WriteLine("DEL \"{0}\"", Constants.LauncherUpdaterName);
                 batFile.WriteLine("DEL \"%~f0\" & START \"\" /B \"{0}\"", self);
             }
 
