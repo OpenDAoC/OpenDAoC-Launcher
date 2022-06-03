@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="Atlas Launcher" Height="250" Width="400" ResizeMode="CanMinimize" WindowStyle="SingleBorderWindow"
         HorizontalAlignment="Stretch" Icon="/img/icon.ico">
-    <Grid>
+    <Grid MouseDown="GridBread_MouseDown">
         <Grid.Background>
             <ImageBrush ImageSource="/img/home-bg.png" Stretch="UniformToFill" />
         </Grid.Background>
@@ -17,9 +17,9 @@
         <Grid.ColumnDefinitions>
 
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="3.5*" />
 
         </Grid.ColumnDefinitions>
@@ -28,11 +28,12 @@
                 Foreground="LightGray" BorderBrush="Gray" TextBlock.FontSize="8" Click="OptionsButton_Click" />
         <Button x:Name="RegisterButton" Grid.Column="3" Content="REGISTER" HorizontalAlignment="Right"
                 VerticalAlignment="Top" Padding="1" Margin="0,10,105,0" Height="20" Width="80" Background="{x:Null}"
-                Foreground="LightGreen" BorderBrush="LightGreen" TextBlock.FontSize="10" Click="RegisterButton_Click" Grid.ColumnSpan="2" />
+                Foreground="LightGreen" BorderBrush="LightGreen" TextBlock.FontSize="10" Click="RegisterButton_Click"
+                Grid.Row="0" Grid.ColumnSpan="2" />
         <TextBox x:Name="UsernameBox" Grid.Column="4" Grid.Row="0" TextWrapping="Wrap" Foreground="White"
                  CaretBrush="White" Height="25" TextBlock.FontSize="12" Width="130" Margin="0,0,0,40" />
         <Label x:Name="UsernameLabel" Grid.Column="3" Grid.Row="0" Content="Account" Foreground="White" Height="25"
-               HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,0,0,40"/>
+               HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,0,0,40" />
         <PasswordBox x:Name="PasswordBox" Grid.Column="4" Grid.Row="0" Foreground="White" CaretBrush="White"
                      Height="25" Width="130" HorizontalAlignment="Center" TextBlock.FontSize="12" Margin="0,0,0,-10" />
         <Label x:Name="PasswordLabel" Grid.Column="3" Grid.Row="0" Content="Password" Foreground="White" Height="25"
@@ -50,20 +51,28 @@
         </ComboBox>
         <Label x:Name="QuickloginLabel" Grid.Column="3" Grid.Row="0" Content="Character" Foreground="White" Height="25"
                HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,65,0,0" />
-        <Image x:Name="AlbIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="1" Height="40" Source="/img/alb.png" Stretch="Uniform" Margin="5,115,0,0"/>
-        <Label x:Name="AlbLabel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="1" Width="40" HorizontalContentAlignment="Center" Content="N/A" Foreground="Red" Height="25"
+        <Image x:Name="AlbIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Height="40" Source="/img/alb.png"
+               Stretch="Uniform" Margin="5,115,0,0" />
+        <Label x:Name="AlbLabel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Width="40"
+               HorizontalContentAlignment="Center" Content="N/A" Foreground="Red" Height="25"
                HorizontalAlignment="Center" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="4,180,0,0" />
-        <Image x:Name="MidIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Height="40" Source="/img/mid.png" Stretch="Uniform" Margin="5,109,0,0"/>
-        <Label x:Name="MidLabel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Width="40" HorizontalContentAlignment="Center" Content="N/A" Foreground="DodgerBlue" Height="25"
+        <Image x:Name="MidIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Height="40"
+               Source="/img/mid.png" Stretch="Uniform" Margin="5,109,0,0" />
+        <Label x:Name="MidLabel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Width="40"
+               HorizontalContentAlignment="Center" Content="N/A" Foreground="DodgerBlue" Height="25"
                HorizontalAlignment="Center" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="5,180,0,0" />
-        <Image x:Name="HibIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2" Height="40" Source="/img/hib.png" Stretch="Uniform" Margin="5,116,0,0"/>
-        <Label x:Name="HibLabel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2" Width="40" HorizontalContentAlignment="Center" Content="N/A" Foreground="LimeGreen" Height="25"
+        <Image x:Name="HibIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2" Height="40"
+               Source="/img/hib.png" Stretch="Uniform" Margin="5,116,0,0" />
+        <Label x:Name="HibLabel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2" Width="40"
+               HorizontalContentAlignment="Center" Content="N/A" Foreground="LimeGreen" Height="25"
                HorizontalAlignment="Center" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="10,180,0,0" />
         <Button x:Name="PlayButton" Grid.Column="4" Grid.Row="0" Content="Play" HorizontalAlignment="Center"
                 TextBlock.FontSize="18" TextBlock.FontWeight="bold"
                 Margin="0,125,0,17" Width="130" Height="45" Click="PlayButton_Click" ClickMode="Release"
                 IsDefault="True" Background="{x:Null}" Foreground="#FFFFDE00" Grid.RowSpan="2" />
-        <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Center" Foreground="White" TextBlock.FontWeight="Medium" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="4" PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="0,0,0,2"></Label>
+        <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Center" Foreground="White"
+               TextBlock.FontWeight="Medium" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="4"
+               PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="0,0,0,2" />
 
     </Grid>
 </Window>

@@ -67,6 +67,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BreadWindow.xaml.cs">
+      <DependentUpon>BreadWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
@@ -77,6 +80,7 @@
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\IFile.cs" />
     <Compile Include="Utils\Updater.cs" />
+    <Page Include="BreadWindow.xaml" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -121,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Resource Include="img\bread.jpg" />
     <Resource Include="img\alb.png" />
     <Resource Include="img\hib.png" />
     <Resource Include="img\mid.png" />

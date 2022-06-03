@@ -6,7 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Input;
 using Newtonsoft.Json;
 using WPFLauncher.Properties;
 
@@ -18,8 +20,10 @@ namespace WPFLauncher
     public partial class MainWindow : Window
     {
         private bool _updateAvailable;
-        
+
         private BackgroundWorker _updateChecker;
+        private int BreadClicks = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -33,21 +37,11 @@ namespace WPFLauncher
         private void InitializeSettings()
         {
             LauncherWindow.Title = "Atlas Launcher v" + Constants.LauncherVersion;
-            if (Settings.Default.Username != "")
-            {
-                UsernameBox.Text = Settings.Default.Username;
-            }
-            if (Settings.Default.Password != "")
-            {
-                PasswordBox.Password = Settings.Default.Password;
-            }
-            if (Settings.Default.QuickCharacter != "")
-            {
-                QuickloginCombo.Text = Settings.Default.QuickCharacter;
-            }
-
+            if (Settings.Default.Username != "") UsernameBox.Text = Settings.Default.Username;
+            if (Settings.Default.Password != "") PasswordBox.Password = Settings.Default.Password;
+            if (Settings.Default.QuickCharacter != "") QuickloginCombo.Text = Settings.Default.QuickCharacter;
         }
-        
+
         private void InitializeWorkers()
         {
             _updateChecker = new BackgroundWorker();
@@ -86,8 +80,8 @@ namespace WPFLauncher
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(Constants.RegisterUrl);
-        }        
-        
+        }
+
         private void RefreshCount(object sender, EventArgs e)
         {
             GetPlayerCount();
@@ -107,14 +101,12 @@ namespace WPFLauncher
                 foreach (var file in filesToDownload)
                 {
                     var data = _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName).Result;
-                    if (file.FileName.Contains("AtlasLauncher"))
-                    {
-                        updateSelf = true;
-                    }
+                    if (file.FileName.Contains("AtlasLauncher")) updateSelf = true;
                     new FileInfo(file.FileName).Directory?.Create();
                     File.WriteAllBytes(file.FileName, data);
-                    _updateChecker.ReportProgress((int) (100 * (filesToDownload.IndexOf(file) + 1) / totalFiles));
+                    _updateChecker.ReportProgress(100 * (filesToDownload.IndexOf(file) + 1) / totalFiles);
                 }
+
                 Updater.SaveLocalVersion(Updater.GetVersion());
                 if (updateSelf) //handle self update https://andreasrohner.at/posts/Programming/C%23/A-platform-independent-way-for-a-C%23-program-to-update-itself/
                     UpdateLauncher();
@@ -127,35 +119,38 @@ namespace WPFLauncher
 
         private static void UpdateLauncher()
         {
-            var self = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var self = Assembly.GetExecutingAssembly().Location;
 
-            using (var batFile = new StreamWriter (File.Create ( "AtlasLauncherUpdate.bat"))) {
-                    batFile.WriteLine ("@ECHO OFF");
-                    batFile.WriteLine ("TIMEOUT /t 1 /nobreak > NUL");
-                    batFile.WriteLine ("TASKKILL /IM \"{0}\" > NUL", "AtlasLauncher.exe");
-                    batFile.WriteLine ("MOVE \"{0}\" \"{1}\"", Constants.LauncherUpdaterName, "AtlasLauncher.exe");
-                    batFile.WriteLine ("DEL \"%~f0\" & START \"\" /B \"{0}\"", self);
+            using (var batFile = new StreamWriter(File.Create("AtlasLauncherUpdate.bat")))
+            {
+                batFile.WriteLine("@ECHO OFF");
+                batFile.WriteLine("TIMEOUT /t 1 /nobreak > NUL");
+                batFile.WriteLine("TASKKILL /IM \"{0}\" > NUL", "AtlasLauncher.exe");
+                batFile.WriteLine("MOVE \"{0}\" \"{1}\"", Constants.LauncherUpdaterName, "AtlasLauncher.exe");
+                batFile.WriteLine("DEL \"%~f0\" & START \"\" /B \"{0}\"", self);
             }
+
             var startInfo = new ProcessStartInfo("AtlasLauncherUpdate.bat");
             startInfo.CreateNoWindow = true;
             startInfo.UseShellExecute = false;
-            Process.Start (startInfo);
+            Process.Start(startInfo);
 
             Environment.Exit(0);
         }
 
-        private void UpdateChecker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
+        private void UpdateChecker_RunWorkerCompleted(object sender,
+            RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
         {
             PlayButton.Content = !Updater.CheckForNewVersion() ? "Play" : "Update";
             PlayButton.IsEnabled = true;
         }
-        
+
         private void Play()
         {
             if (!CheckUserPass()) return;
             BuildBat();
         }
-        
+
         private bool CheckUserPass()
         {
             if (UsernameBox.Text == "" || PasswordBox.Password == "")
@@ -163,7 +158,7 @@ namespace WPFLauncher
                 MessageBox.Show(Constants.MessageNoCredentials);
                 return false;
             }
-            
+
             if (Settings.Default.SaveAccount)
             {
                 Settings.Default.Username = UsernameBox.Text;
@@ -176,6 +171,7 @@ namespace WPFLauncher
                 Settings.Default.Password = "";
                 Settings.Default.QuickCharacter = "";
             }
+
             Settings.Default.Save();
             return true;
         }
@@ -227,6 +223,7 @@ namespace WPFLauncher
 
             if (!Settings.Default.KeepOpen) Environment.Exit(0);
         }
+
         private void GetQuickCharacters()
         {
             var path = Environment.ExpandEnvironmentVariables(Constants.AppData) + Constants.UserPath;
@@ -260,12 +257,13 @@ namespace WPFLauncher
                         realm = "Hib";
                         break;
                 }
+
                 quickCharacters.Add(entryData[0] + " - " + realm);
             }
 
             QuickloginCombo.ItemsSource = quickCharacters.Distinct();
         }
-        
+
         private void GetPlayerCount()
         {
             try
@@ -312,9 +310,17 @@ namespace WPFLauncher
             new OptionsWindow().ShowDialog();
         }
 
-        private void PatchButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void PatchButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             new PatchNotesWindow().ShowDialog();
+        }
+
+        private void GridBread_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            BreadClicks++;
+            if (BreadClicks != 10) return;
+            new BreadWindow().ShowDialog();
+            BreadClicks = 0;
         }
     }
 

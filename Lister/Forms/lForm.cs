@@ -1,9 +1,9 @@
-﻿using Cyclic.Redundancy.Check;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using Cyclic.Redundancy.Check;
 
 namespace AtlasPatcher.Lister
 {
@@ -73,7 +73,7 @@ namespace AtlasPatcher.Lister
 
         public string[] GetFiles(object Path)
         {
-            return Directory.GetFiles(Path.ToString(), "*.*", System.IO.SearchOption.AllDirectories);
+            return Directory.GetFiles(Path.ToString(), "*.*", SearchOption.AllDirectories);
         }
 
         public int GetFilesCount(string[] Files)

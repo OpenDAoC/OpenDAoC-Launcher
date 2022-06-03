@@ -37,7 +37,7 @@ namespace WPFLauncher
                 .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             Constants.RemoteFilePath = patchlistByLine[0];
 
-            for (var i = 1; i < patchlistByLine.Length; i ++)
+            for (var i = 1; i < patchlistByLine.Length; i++)
             {
                 var line = patchlistByLine[i].Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
                 var file = new FileData(line[0], line[1], line[2]);
@@ -59,13 +59,13 @@ namespace WPFLauncher
             var filesToDownload = remotepatchList.Where(file => !LocalFileExists(file)).ToList();
             return filesToDownload;
         }
-        
+
         public static void SaveLocalVersion(int version)
         {
             Settings.Default.localVersion = version;
             Settings.Default.Save();
         }
-        
+
         private static string CalculateHash(string filename)
         {
             using (var md5 = MD5.Create())
@@ -76,6 +76,7 @@ namespace WPFLauncher
                 }
             }
         }
+
         private static string StringifyHash(byte[] md5)
         {
             return BitConverter.ToString(md5).Replace("-", "").ToLowerInvariant();

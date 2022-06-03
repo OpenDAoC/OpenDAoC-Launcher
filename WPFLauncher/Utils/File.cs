@@ -24,7 +24,7 @@
         ///     The file name of the file.
         /// </summary>
         public string FileName { get; }
-        
+
         /// <summary>
         ///     The size of the file.
         /// </summary>
