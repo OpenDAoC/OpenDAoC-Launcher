@@ -260,6 +260,7 @@ namespace WPFLauncher
 
                 quickCharacters.Add(entryData[0] + " - " + realm);
             }
+            quickCharacters.Add("");
 
             QuickloginCombo.ItemsSource = quickCharacters.Distinct();
         }

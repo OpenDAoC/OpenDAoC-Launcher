@@ -2,7 +2,7 @@
 {
     internal class Constants
     {
-        public const string LauncherVersion = "1.0.0";
+        public const string LauncherVersion = "1.0.1";
 
         #region Patcher
 
