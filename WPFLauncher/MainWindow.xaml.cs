@@ -329,9 +329,18 @@ namespace WPFLauncher
 
         private void TaskbarIcon_OnTrayLeftMouseDown(object sender, RoutedEventArgs e)
         {
-            if (WindowState == WindowState.Minimized)
+            if (!IsVisible)
             {
-                MaximizeLauncher();
+                Show();
+                if (WindowState == WindowState.Minimized)
+                {
+                    WindowState = WindowState.Normal;
+                }
+
+                Activate();
+                Topmost = true;  // important
+                Topmost = false; // important
+                Focus();         // important
             }
             else
             {
