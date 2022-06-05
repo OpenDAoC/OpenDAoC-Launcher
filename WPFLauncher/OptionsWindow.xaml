@@ -65,9 +65,13 @@
                    HorizontalAlignment="Right" />
         <ToggleButton x:Name="KeepOpenButton" Grid.Row="2" Grid.Column="2" Style="{StaticResource OnOffButtonStyle}"
                       BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" />
-        <TextBlock x:Name="PTRText" Grid.Row="3" Grid.Column="1" Text="Connect to PTR" TextBlock.FontWeight="Bold"
+        <TextBlock x:Name="TrayText" Grid.Row="3" Grid.Column="1" Text="Minimize to tray" TextBlock.FontWeight="Bold"
                    Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <ToggleButton x:Name="PTRButton" Grid.Row="3" Grid.Column="2" Style="{StaticResource OnOffButtonStyle}"
+        <ToggleButton x:Name="TrayButton" Grid.Row="3" Grid.Column="2" Style="{StaticResource OnOffButtonStyle}"
+                      BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" />
+        <TextBlock x:Name="PTRText" Grid.Row="4" Grid.Column="1" Text="Connect to PTR" TextBlock.FontWeight="Bold"
+                   Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" />
+        <ToggleButton x:Name="PTRButton" Grid.Row="4" Grid.Column="2" Style="{StaticResource OnOffButtonStyle}"
                       BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" />
 
 

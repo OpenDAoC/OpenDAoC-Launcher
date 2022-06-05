@@ -20,7 +20,6 @@ namespace WPFLauncher
     public partial class MainWindow : Window
     {
         private bool _updateAvailable;
-
         private BackgroundWorker _updateChecker;
         private int BreadClicks = 0;
 
@@ -32,10 +31,12 @@ namespace WPFLauncher
             GetQuickCharacters();
             InitializeSettings();
             Activated += RefreshCount;
+            StateChanged += Window_StateChanged;
         }
 
         private void InitializeSettings()
         {
+            ShowInTaskbar = true;
             LauncherWindow.Title = "Atlas Launcher v" + Constants.LauncherVersion;
             if (Settings.Default.Username != "") UsernameBox.Text = Settings.Default.Username;
             if (Settings.Default.Password != "") PasswordBox.Password = Settings.Default.Password;
@@ -261,6 +262,7 @@ namespace WPFLauncher
 
                 quickCharacters.Add(entryData[0] + " - " + realm);
             }
+
             quickCharacters.Add("");
 
             QuickloginCombo.ItemsSource = quickCharacters.Distinct();
@@ -323,6 +325,39 @@ namespace WPFLauncher
             if (BreadClicks != 10) return;
             new BreadWindow().ShowDialog();
             BreadClicks = 0;
+        }
+
+        private void TaskbarIcon_OnTrayLeftMouseDown(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                MaximizeLauncher();
+            }
+            else
+            {
+                MinimizeLauncher();
+            }
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState != WindowState.Minimized) return;
+            if (Settings.Default.MinimizeToTray)
+            {
+                Hide();
+            }
+        }
+
+        private void MinimizeLauncher()
+        {
+            WindowState = WindowState.Minimized;
+            Hide();
+        }
+
+        private void MaximizeLauncher()
+        {
+            WindowState = WindowState.Normal;
+            Show();
         }
     }
 
