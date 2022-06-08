@@ -29,5 +29,17 @@
         ///     The size of the file.
         /// </summary>
         public string Size { get; }
+
+        /// <summary>
+        /// The current state of the file after checking the local folder
+        /// </summary>
+        public FileState FileState { get; set; } = FileState.None;
+    }
+
+    public enum FileState
+    {
+        None,
+        Found,
+        Missing
     }
 }

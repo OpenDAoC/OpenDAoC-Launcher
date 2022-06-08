@@ -6,67 +6,92 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using WPFLauncher.Properties;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace WPFLauncher
 {
     public class Updater
     {
-        public static int GetVersion()
+        private int version = 0;
+
+        public async Task<int> GetVersionAsync()
         {
-            var client = new WebClient();
-            var stream = client.OpenRead(Constants.RemoteVersionUrl);
-            var reader = new StreamReader(stream);
-            var line = reader.ReadLine();
-            var version = int.Parse(line);
+            if (version > 0)
+                return version;
+
+            using (var httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetAsync(Constants.RemoteVersionUrl);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var text = await response.Content.ReadAsStringAsync();
+                    version = Convert.ToInt32(text);
+                }
+            }
+
             return version;
         }
 
-        public static bool CheckForNewVersion()
+        public async Task<bool> CheckForNewVersionAsync()
         {
-            var version = GetVersion();
+            var version = await GetVersionAsync();
             var currentVersion = Settings.Default.localVersion;
             return version > currentVersion;
         }
 
-        public static List<FileData> GetPatchlist()
+        public async Task<List<FileData>> GetPatchlistAsync()
         {
             var remotePatchlist = new List<FileData>();
-            var client = new WebClient();
-            var data = client.DownloadData(Constants.RemoteFileList);
-            var patchlistByLine = Encoding.Default.GetString(data)
-                .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
-            Constants.RemoteFilePath = patchlistByLine[0];
 
-            for (var i = 1; i < patchlistByLine.Length; i++)
+            using (var httpClient = new HttpClient())
             {
-                var line = patchlistByLine[i].Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
-                var file = new FileData(line[0], line[1], line[2]);
-                remotePatchlist.Add(file);
+                var response = await httpClient.GetAsync(Constants.RemoteFileList);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var text = await response.Content.ReadAsStringAsync();
+
+                    var patchlistLines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    Constants.RemoteFilePath = patchlistLines[0];
+
+                    for (var i = 1; i < patchlistLines.Length; i++)
+                    {
+                        var line = patchlistLines[i].Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                        var file = new FileData(line[0], line[1], line[2]);
+                        remotePatchlist.Add(file);
+                    }
+                }
             }
 
             return remotePatchlist;
         }
 
-        private static bool LocalFileExists(FileData file)
+        private bool LocalFileExists(FileData file)
         {
             if (!File.Exists(file.FileName)) return false;
             var localHash = CalculateHash(file.FileName);
             return localHash == file.Hash;
         }
 
-        public static List<FileData> GetFilesToDownload(List<FileData> remotepatchList)
+        public List<FileData> GetFilesToDownload(List<FileData> remotepatchList)
         {
-            var filesToDownload = remotepatchList.Where(file => !LocalFileExists(file)).ToList();
-            return filesToDownload;
+            Parallel.ForEach(remotepatchList, file =>
+            {
+                file.FileState = LocalFileExists(file) ? FileState.Found : FileState.Missing;
+            });
+
+            return remotepatchList.Where(x => x.FileState == FileState.Missing).ToList();
         }
 
-        public static void SaveLocalVersion(int version)
+        public void SaveLocalVersion(int version)
         {
             Settings.Default.localVersion = version;
             Settings.Default.Save();
         }
 
-        private static string CalculateHash(string filename)
+        private string CalculateHash(string filename)
         {
             using (var md5 = MD5.Create())
             {
@@ -77,7 +102,7 @@ namespace WPFLauncher
             }
         }
 
-        private static string StringifyHash(byte[] md5)
+        private string StringifyHash(byte[] md5)
         {
             return BitConverter.ToString(md5).Replace("-", "").ToLowerInvariant();
         }
