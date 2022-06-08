@@ -11,6 +11,9 @@ using System.Windows;
 using System.Windows.Input;
 using Newtonsoft.Json;
 using WPFLauncher.Properties;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Globalization;
 
 namespace WPFLauncher
 {
@@ -20,18 +23,20 @@ namespace WPFLauncher
     public partial class MainWindow : Window
     {
         private bool _updateAvailable;
-        private BackgroundWorker _updateChecker;
         private int BreadClicks = 0;
+        private Updater updater = new Updater();
+        private bool updating = false;
 
         public MainWindow()
         {
             InitializeComponent();
-            InitializeWorkers();
             CheckVersion();
+            SetButtonGradients(0);
             GetQuickCharacters();
             InitializeSettings();
             Activated += RefreshCount;
             StateChanged += Window_StateChanged;
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void InitializeSettings()
@@ -43,34 +48,35 @@ namespace WPFLauncher
             if (Settings.Default.QuickCharacter != "") QuickloginCombo.Text = Settings.Default.QuickCharacter;
         }
 
-        private void InitializeWorkers()
+        private async Task CheckVersion()
         {
-            _updateChecker = new BackgroundWorker();
-            _updateChecker.DoWork += UpdateChecker_DoWork;
-            _updateChecker.RunWorkerCompleted += UpdateChecker_RunWorkerCompleted;
-            _updateChecker.ProgressChanged += UpdateChecker_ProgressChanged;
-            _updateChecker.WorkerReportsProgress = true;
+            if (!updating)
+            {
+                _updateAvailable = await updater.CheckForNewVersionAsync();
+                PlayButton.Content = _updateAvailable ? "Update" : "Play";
+            }
         }
 
-        private void UpdateChecker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            PlayButton.Content = $"{e.ProgressPercentage}%";
-        }
-
-        private void CheckVersion()
-        {
-            _updateAvailable = Updater.CheckForNewVersion();
-            PlayButton.Content = _updateAvailable ? "Update" : "Play";
-        }
-
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            _updateAvailable = Updater.CheckForNewVersion();
+            _updateAvailable = await updater.CheckForNewVersionAsync();
             if (_updateAvailable)
             {
                 PlayButton.Content = _updateAvailable ? "Checking.." : "Play";
                 PlayButton.IsEnabled = !_updateAvailable;
-                _updateChecker.RunWorkerAsync(2000);
+                updating = true;
+
+                await Task.Run(async () =>
+                {
+                    await UpdateFiles();
+                });
+
+                updating = false;
+
+                PlayButton.Content = !(await updater.CheckForNewVersionAsync()) ? "Play" : "Update";
+                PlayButton.IsEnabled = true;
+                SetButtonGradients(0.0);
+                PatchProgressLabel.Content = "";
             }
             else
             {
@@ -83,32 +89,66 @@ namespace WPFLauncher
             Process.Start(Constants.RegisterUrl);
         }
 
-        private void RefreshCount(object sender, EventArgs e)
+        private async void RefreshCount(object sender, EventArgs e)
         {
             GetPlayerCount();
-            CheckVersion();
+            await CheckVersion();
         }
 
-        private void UpdateChecker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task UpdateFiles()
         {
-            var patchlist = Updater.GetPatchlist();
-            var filesToDownload = Updater.GetFilesToDownload(patchlist);
+            //TestProgress();
+            //return;
+
+            this.Dispatcher.Invoke(() => {
+                PatchProgressLabel.Content = "Checking existing files";
+            });
+
+            var patchlist = await updater.GetPatchlistAsync();
+            var filesToDownload = updater.GetFilesToDownload(patchlist);
+
             HttpClient _httpClient;
             _httpClient = new HttpClient();
+            this.Dispatcher.Invoke(() => {
+                PlayButton.Content = "0.0%";
+                SetButtonGradients(0.0);
+            });
+            
             try
             {
                 var updateSelf = false;
                 var totalFiles = filesToDownload.Count;
+                var currentFile = 0;
                 foreach (var file in filesToDownload)
                 {
-                    var data = _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName).Result;
-                    if (file.FileName.Contains("AtlasLauncher")) updateSelf = true;
-                    new FileInfo(file.FileName).Directory?.Create();
-                    File.WriteAllBytes(file.FileName, data);
-                    _updateChecker.ReportProgress(100 * (filesToDownload.IndexOf(file) + 1) / totalFiles);
+                    currentFile++;
+
+                    if (file == null)
+                        continue;
+
+                    try
+                    {
+                        var data = await _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName);
+                        if (file.FileName.Contains("AtlasLauncher")) updateSelf = true;
+                        new FileInfo(file.FileName).Directory?.Create();
+                        File.WriteAllBytes(file.FileName, data);
+
+                        var percent = Math.Round(100 * ((double)currentFile / totalFiles), 2);
+                        this.Dispatcher.Invoke(() => {
+                            PlayButton.Content = $"{percent}%";
+                            PatchProgressLabel.Content = $"{currentFile} / {totalFiles}";
+                            SetButtonGradients(((double)currentFile / totalFiles));
+                        });
+                    }
+                    catch
+                    {
+                        //skip to next file
+                    }
+                    
+                    
                 }
 
-                Updater.SaveLocalVersion(Updater.GetVersion());
+                updater.SaveLocalVersion(await updater.GetVersionAsync());
                 if (updateSelf) //handle self update https://andreasrohner.at/posts/Programming/C%23/A-platform-independent-way-for-a-C%23-program-to-update-itself/
                     UpdateLauncher();
             }
@@ -116,6 +156,70 @@ namespace WPFLauncher
             {
                 MessageBox.Show(Constants.MessageDownloadError);
             }
+        }
+
+        private void TestProgress()
+        {
+            int maxCnt = 1000;
+            for (int i = 0; i < maxCnt; i++)
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var ratio = i / (double)maxCnt;
+                    PlayButton.Content = $"{ratio * 100}%";
+                    SetButtonGradients(ratio);
+                    PatchProgressLabel.Content = $"{i} / {maxCnt}";
+                });
+
+                System.Threading.Thread.Sleep(20);
+            }
+        }
+
+        private void SetButtonGradients(double ratio)
+        {
+            var buttonWidth = 130;
+            var textWidth = GetTextWidth();
+
+            var background = PlayButton.Background as LinearGradientBrush;
+            var startColor = Color.FromArgb(255, 255, 222, 0);
+            var endColor = Color.FromArgb(0, 255, 255, 255);
+
+            background.GradientStops.Clear();
+            background.GradientStops.Add(new GradientStop(startColor, 0));
+            background.GradientStops.Add(new GradientStop(startColor, ratio));
+            background.GradientStops.Add(new GradientStop(endColor, ratio));
+            background.GradientStops.Add(new GradientStop(endColor, 1.0));
+
+            var textStartPosition = (buttonWidth / 2) - (textWidth / 2);
+            var textRatio = 0.0d;
+            if (buttonWidth * ratio > textStartPosition)
+            {
+                textRatio = ((buttonWidth * ratio) - textStartPosition) / textWidth;
+
+                if (textRatio > 1) textRatio = 1;
+            }            
+
+            var foreground = PlayButton.Foreground as LinearGradientBrush;
+
+            startColor = Color.FromArgb(255, 0, 0, 0);
+            endColor = Color.FromArgb(255, 255, 222, 0);
+            foreground.GradientStops.Clear();
+            foreground.GradientStops.Add(new GradientStop(startColor, 0));
+            foreground.GradientStops.Add(new GradientStop(startColor, textRatio));
+            foreground.GradientStops.Add(new GradientStop(endColor, textRatio));
+            foreground.GradientStops.Add(new GradientStop(endColor, 1.0));
+        }
+
+        private double GetTextWidth()
+        {
+            var btn = PlayButton;
+
+            var formatted = new FormattedText(
+                          btn.Content.ToString(), CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
+                          new Typeface(btn.FontFamily, btn.FontStyle, btn.FontWeight, btn.FontStretch),
+                          btn.FontSize, btn.Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+
+            return formatted.Width;
         }
 
         private static void UpdateLauncher()
@@ -138,13 +242,6 @@ namespace WPFLauncher
             Process.Start(startInfo);
 
             Environment.Exit(0);
-        }
-
-        private void UpdateChecker_RunWorkerCompleted(object sender,
-            RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
-        {
-            PlayButton.Content = !Updater.CheckForNewVersion() ? "Play" : "Update";
-            PlayButton.IsEnabled = true;
         }
 
         private void Play()

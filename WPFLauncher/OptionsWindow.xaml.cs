@@ -10,6 +10,7 @@ namespace WPFLauncher
         {
             InitializeComponent();
             LoadSavedOptions();
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void LoadSavedOptions()

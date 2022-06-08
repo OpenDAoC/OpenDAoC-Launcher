@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="Atlas Launcher" Height="250" Width="400" ResizeMode="CanMinimize" WindowStyle="SingleBorderWindow"
         HorizontalAlignment="Stretch" Icon="/img/icon.ico">
-    
-    
+
+
     <Grid MouseDown="GridBread_MouseDown">
 
         <Grid.Background>
@@ -73,13 +73,32 @@
         <Button x:Name="PlayButton" Grid.Column="4" Grid.Row="0" Content="Play" HorizontalAlignment="Center"
                 TextBlock.FontSize="18" TextBlock.FontWeight="bold"
                 Margin="0,125,0,17" Width="130" Height="45" Click="PlayButton_Click" ClickMode="Release"
-                IsDefault="True" Background="{x:Null}" Foreground="#FFFFDE00" Grid.RowSpan="2" />
+                IsDefault="True" Grid.RowSpan="2" RenderTransformOrigin="0.5,0.5" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FFFFDE00" Offset="1"/>
+                    <GradientStop Color="Black" Offset="0.5"/>
+                    <GradientStop Color="#FFFFDE00" Offset="0.5"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+            <Button.Background>
+                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                    <GradientStop Color="#FFFFDE00"/>
+                    <GradientStop Color="Transparent" Offset="1"/>
+                    <GradientStop Color="#FFFFDE00" Offset="0.5"/>
+                    <GradientStop Color="Transparent" Offset="0.5"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Label x:Name="PatchProgressLabel" Grid.Column="4" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Width="130" Height="18" Foreground="#DDFFFFFF" FontSize="8" FontWeight="Bold" Margin="0,3,0,0"/>
         <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Center" Foreground="White"
-               TextBlock.FontWeight="Medium" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="4"
-               PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="0,0,0,2" />
+               TextBlock.FontWeight="Medium" VerticalAlignment="Top" Grid.Row="1" Grid.Column="4"
+               PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="0,34,0,0" Height="22" FontSize="11" />
         <tb:TaskbarIcon
             IconSource="/img/icon.ico"
             ToolTipText="Atlas Launcher" 
             TrayLeftMouseDown="TaskbarIcon_OnTrayLeftMouseDown" />
+        
     </Grid>
 </Window>
