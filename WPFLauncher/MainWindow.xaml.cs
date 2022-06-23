@@ -80,7 +80,80 @@ namespace WPFLauncher
             }
             else
             {
-                Play();
+                if (getDiscordStatus(UsernameBox.Text))
+                {
+                    Play();
+                }
+                else
+                {
+                    promptDiscord();
+                }
+                
+            }
+        }
+        
+        private bool getDiscordStatus(string accountName)
+        {
+            try
+            {
+                var webRequest = WebRequest.Create($"https://api.atlasfreeshard.com/utils/discordstatus/{accountName}") as HttpWebRequest;
+
+                webRequest.ContentType = "application/json";
+                webRequest.UserAgent = "Nothing";
+
+                var response = webRequest.GetResponse();
+
+                using (var s = response.GetResponseStream())
+                {
+                    using (var sr = new StreamReader(s))
+                    {
+                        var discord = sr.ReadToEnd();
+                        return discord == "true";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return true;
+            }
+        }
+        private bool isDiscordRequired()
+        {
+            try
+            {
+                var webRequest = WebRequest.Create("https://api.atlasfreeshard.com/utils/discordrequired") as HttpWebRequest;
+
+                webRequest.ContentType = "application/json";
+                webRequest.UserAgent = "Nothing";
+
+                var response = webRequest.GetResponse();
+
+                using (var s = response.GetResponseStream())
+                {
+                    using (var sr = new StreamReader(s))
+                    {
+                        var discordRequired = sr.ReadToEnd();
+                        return discordRequired == "true";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        
+        private void promptDiscord()
+        {
+            var result = MessageBox.Show(Constants.DiscordMessage, Constants.DiscordCaption, MessageBoxButton.YesNo, MessageBoxImage.Question);
+            
+            if (result == MessageBoxResult.Yes)
+            {
+                Process.Start(Constants.LinkUrl);
+            }
+            else
+            {
+                MessageBox.Show(Constants.DiscordError, Constants.DiscordCaption, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
