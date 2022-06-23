@@ -80,7 +80,7 @@ namespace WPFLauncher
             }
             else
             {
-                if (getDiscordStatus(UsernameBox.Text))
+                if (await getDiscordStatus(UsernameBox.Text))
                 {
                     Play();
                 }
@@ -92,30 +92,21 @@ namespace WPFLauncher
             }
         }
         
-        private bool getDiscordStatus(string accountName)
+        private async Task<bool> getDiscordStatus(string accountName)
         {
-            try
+            
+            using (var httpClient = new HttpClient())
             {
-                var webRequest = WebRequest.Create($"https://api.atlasfreeshard.com/utils/discordstatus/{accountName}") as HttpWebRequest;
+                var response = await httpClient.GetAsync($"https://api.atlasfreeshard.com/utils/discordstatus/{accountName}");
 
-                webRequest.ContentType = "application/json";
-                webRequest.UserAgent = "Nothing";
-
-                var response = webRequest.GetResponse();
-
-                using (var s = response.GetResponseStream())
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    using (var sr = new StreamReader(s))
-                    {
-                        var discord = sr.ReadToEnd();
-                        return discord == "true";
-                    }
+                    return true;
                 }
+
+                return false;
             }
-            catch (Exception e)
-            {
-                return true;
-            }
+
         }
         private bool isDiscordRequired()
         {
