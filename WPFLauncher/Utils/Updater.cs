@@ -22,12 +22,19 @@ namespace WPFLauncher
 
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(Constants.RemoteVersionUrl);
-
-                if (response.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    var text = await response.Content.ReadAsStringAsync();
-                    version = Convert.ToInt32(text);
+                    var response = await httpClient.GetAsync(Constants.RemoteVersionUrl);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        var text = await response.Content.ReadAsStringAsync();
+                        version = Convert.ToInt32(text);
+                    }
+                }
+                catch
+                {
+                    return 0;
                 }
             }
 
@@ -44,30 +51,36 @@ namespace WPFLauncher
         public async Task<List<FileData>> GetPatchlistAsync()
         {
             var remotePatchlist = new List<FileData>();
-
+            
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(Constants.RemoteFileList);
-
-                if (response.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    var text = await response.Content.ReadAsStringAsync();
+                    var response = await httpClient.GetAsync(Constants.RemoteFileList);
 
-                    var patchlistLines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                    Constants.RemoteFilePath = patchlistLines[0];
-
-                    for (var i = 1; i < patchlistLines.Length; i++)
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        var line = patchlistLines[i].Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                        var file = new FileData(line[0], line[1], line[2]);
-                        remotePatchlist.Add(file);
+                        var text = await response.Content.ReadAsStringAsync();
+
+                        var patchlistLines = text.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+                        Constants.RemoteFilePath = patchlistLines[0];
+
+                        for (var i = 1; i < patchlistLines.Length; i++)
+                        {
+                            var line = patchlistLines[i].Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
+                            var file = new FileData(line[0], line[1], line[2]);
+                            remotePatchlist.Add(file);
+                        }
                     }
                 }
+                catch
+                {
+                    return null;
+                }
             }
-
             return remotePatchlist;
         }
-
+        
         private bool LocalFileExists(FileData file)
         {
             if (!File.Exists(file.FileName)) return false;

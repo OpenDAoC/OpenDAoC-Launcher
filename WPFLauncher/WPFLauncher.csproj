@@ -142,7 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="WPFLauncher.manifest" />
+    <EmbeddedResource Include="WPFLauncher.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Resource Include="img\bread.jpg" />
     <Resource Include="img\alb.png" />
     <Resource Include="img\hib.png" />
