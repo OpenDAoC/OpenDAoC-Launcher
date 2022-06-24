@@ -14,6 +14,7 @@ using WPFLauncher.Properties;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Globalization;
+using Serilog;
 
 namespace WPFLauncher
 {
@@ -27,25 +28,47 @@ namespace WPFLauncher
         private Updater updater = new Updater();
         private bool updating = false;
 
+        private Serilog.Core.Logger log;
+
         public MainWindow()
         {
             InitializeComponent();
-            CheckVersion();
-            SetButtonGradients(0);
-            GetQuickCharacters();
-            InitializeSettings();
-            Activated += RefreshCount;
-            StateChanged += Window_StateChanged;
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            InitializeLogger();
+
+            try
+            {
+                CheckVersion();
+                SetButtonGradients(0);
+                GetQuickCharacters();
+                InitializeSettings();
+                Activated += RefreshCount;
+                StateChanged += Window_StateChanged;
+                this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "Error initializing app");
+            }
+            
         }
 
         private void InitializeSettings()
         {
+            log.Information("Initializing settings");
+
             ShowInTaskbar = true;
             LauncherWindow.Title = "Atlas Launcher v" + Constants.LauncherVersion;
             if (Settings.Default.Username != "") UsernameBox.Text = Settings.Default.Username;
             if (Settings.Default.Password != "") PasswordBox.Password = Settings.Default.Password;
             if (Settings.Default.QuickCharacter != "") QuickloginCombo.Text = Settings.Default.QuickCharacter;
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+        }
+
+        private void InitializeLogger()
+        {
+            log = new LoggerConfiguration().WriteTo.File("logs/AtlasLauncher-.txt", rollingInterval: RollingInterval.Day).CreateLogger();
         }
 
         private async Task CheckVersion()
@@ -59,37 +82,44 @@ namespace WPFLauncher
 
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            _updateAvailable = await updater.CheckForNewVersionAsync();
-            if (_updateAvailable)
+            try
             {
-                PlayButton.Content = _updateAvailable ? "Checking.." : "Play";
-                PlayButton.IsEnabled = !_updateAvailable;
-                updating = true;
-
-                await Task.Run(async () =>
+                _updateAvailable = await updater.CheckForNewVersionAsync();
+                if (_updateAvailable)
                 {
-                    await UpdateFiles();
-                });
+                    PlayButton.Content = _updateAvailable ? "Checking.." : "Play";
+                    PlayButton.IsEnabled = !_updateAvailable;
+                    updating = true;
 
-                updating = false;
+                    await Task.Run(async () =>
+                    {
+                        await UpdateFiles();
+                    });
 
-                PlayButton.Content = !(await updater.CheckForNewVersionAsync()) ? "Play" : "Update";
-                PlayButton.IsEnabled = true;
-                SetButtonGradients(0.0);
-                PatchProgressLabel.Content = "";
-            }
-            else
-            {
-                if (await getDiscordStatus(UsernameBox.Text))
-                {
-                    Play();
+                    updating = false;
+
+                    PlayButton.Content = !(await updater.CheckForNewVersionAsync()) ? "Play" : "Update";
+                    PlayButton.IsEnabled = true;
+                    SetButtonGradients(0.0);
+                    PatchProgressLabel.Content = "";
                 }
                 else
                 {
-                    promptDiscord();
+                    if (await getDiscordStatus(UsernameBox.Text))
+                    {
+                        Play();
+                    }
+                    else
+                    {
+                        promptDiscord();
+                    }
+
                 }
-                
             }
+            catch (Exception ex)
+            {
+                log.Error(ex, "Error starting DAOC");
+            }            
         }
         
         private async Task<bool> getDiscordStatus(string accountName)
