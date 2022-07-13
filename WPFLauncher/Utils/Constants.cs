@@ -2,7 +2,7 @@
 {
     internal class Constants
     {
-        public const string LauncherVersion = "1.0.6";
+        public const string LauncherVersion = "1.0.7";
 
         #region Patcher
 
@@ -22,7 +22,7 @@
         #region gameserver
 
         public const string LiveIP = "play.atlasfreeshard.com";
-        public const string PtrIP = "144.76.41.4:10325";
+        public const string PtrIP = "ptr.atlasfreeshard.com";
 
         #endregion
 
