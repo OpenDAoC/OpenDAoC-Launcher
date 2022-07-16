@@ -61,7 +61,7 @@ namespace WPFLauncher
 
             try
             {
-                CheckVersion();
+                /*CheckVersion();*/
                 SetButtonGradients(0);
                 GetQuickCharacters();
                 InitializeSettings();
@@ -109,7 +109,7 @@ namespace WPFLauncher
             try
             {
                 EnableAccountCredentials(false);
-                _updateAvailable = await updater.CheckForNewVersionAsync();
+                /*_updateAvailable = await updater.CheckForNewVersionAsync();*/
                 if (_updateAvailable)
                 {
                     PlayButton.Content = _updateAvailable ? "Checking.." : "Play";
@@ -214,7 +214,7 @@ namespace WPFLauncher
         private async void RefreshCount(object sender, EventArgs e)
         {
             GetPlayerCount();
-            await CheckVersion();
+            /*await CheckVersion();*/
         }
 
         private async Task UpdateFiles()
@@ -400,6 +400,12 @@ namespace WPFLauncher
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 MessageBox.Show(Constants.MessageInvalidCredentials);
+                EnableAccountCredentials(true);
+                return;
+            }
+            else if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                promptDiscord();
                 EnableAccountCredentials(true);
                 return;
             }
