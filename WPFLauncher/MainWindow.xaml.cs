@@ -131,16 +131,7 @@ namespace WPFLauncher
                 }
                 else
                 {
-                    if (await getDiscordStatus(UsernameBox.Text))
-                    {
-                        _ = CheckQueueAsync();
-                    }
-                    else
-                    {
-                        promptDiscord();
-                        EnableAccountCredentials(true);
-                    }
-
+                    _ = CheckQueueAsync();
                 }
             }
             catch (Exception ex)
@@ -379,10 +370,13 @@ namespace WPFLauncher
 
         private async Task CheckQueueAsync()
         {
-            if (!CheckUserPass()) return;
-
             EnableAccountCredentials(false);
-            
+
+            if (!CheckUserPass())
+            {
+                EnableAccountCredentials(true);
+                return;
+            };
 
             var data = new Dictionary<string, string>()
             {
