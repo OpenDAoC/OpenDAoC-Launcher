@@ -95,7 +95,7 @@
         <Label x:Name="PatchProgressLabel" Grid.Column="5" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Width="130" Height="18" Foreground="#DDFFFFFF" FontSize="8" FontWeight="Bold" Margin="0,11,0,0"/>
         <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Left" Foreground="White"
                TextBlock.FontWeight="Medium" VerticalAlignment="Top" Grid.Column="4"
-               PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="47,9,0,0" Height="22" FontSize="11" Grid.ColumnSpan="2" />
+               PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="47,8,0,0" Height="22" FontSize="11" Grid.ColumnSpan="2" />
         <tb:TaskbarIcon
             IconSource="/img/icon.ico"
             ToolTipText="Atlas Launcher" 
