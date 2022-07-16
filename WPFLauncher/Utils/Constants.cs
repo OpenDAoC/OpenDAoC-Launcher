@@ -2,7 +2,7 @@
 {
     internal class Constants
     {
-        public const string LauncherVersion = "1.0.6";
+        public const string LauncherVersion = "1.0.7";
 
         #region Patcher
 
@@ -16,19 +16,19 @@
             RemoteFileList = "https://patch.atlasfreeshard.com/patchlist-new.txt"; 
         
         public static string RemoteFilePath;
-        
+
         #endregion
 
         #region gameserver
 
-        public const string LiveIP = "http://localhost:10300";
-        public const string PtrIP = "144.76.41.4:10325";
+        public const string LiveIP = "play.atlasfreeshard.com";
+        public const string PtrIP = "ptr.atlasfreeshard.com";
         public const string QueueApiIP = "https://queue.atlasfreeshard.com";
 
         #endregion
 
         #region Player Urls
-        
+
         public const string RegisterUrl = "https://atlasl.ink/register";
         public const string LinkUrl = "https://atlasl.ink/link-discord";
         public const string PatchNotesUrl = "https://atlasl.ink/patch-notes";
