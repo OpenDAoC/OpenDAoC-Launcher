@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
-        Title="Atlas Launcher" Height="300" Width="500" ResizeMode="CanMinimize" WindowStyle="SingleBorderWindow"
+        Title="DEBUG: QUEUE: A0: Atlas Launcher" Height="300" Width="500" ResizeMode="CanMinimize" WindowStyle="SingleBorderWindow"
         HorizontalAlignment="Stretch" Icon="/img/icon.ico">
 
 
@@ -73,7 +73,7 @@
                HorizontalAlignment="Left" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="38,7,0,43" />
         <Button x:Name="PlayButton" Grid.Column="5" Grid.Row="0" Content="Play" HorizontalAlignment="Center"
                 TextBlock.FontSize="18" TextBlock.FontWeight="bold"
-                Margin="0,188,0,51" Width="130" Height="45" Click="PlayButton_Click" ClickMode="Release"
+                Margin="0,187,0,68" Width="130" Height="45" Click="PlayButton_Click" ClickMode="Release"
                 IsDefault="True" Grid.RowSpan="2" RenderTransformOrigin="0.5,0.5" >
             <Button.Foreground>
                 <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
@@ -92,10 +92,10 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
-        <Label x:Name="PatchProgressLabel" Grid.Column="5" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Width="130" Height="18" Foreground="#DDFFFFFF" FontSize="8" FontWeight="Bold" Margin="0,16,0,0"/>
-        <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Center" Foreground="White"
-               TextBlock.FontWeight="Medium" VerticalAlignment="Top" Grid.Row="1" Grid.Column="5"
-               PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="0,38,0,0" Height="22" FontSize="11" />
+        <Label x:Name="PatchProgressLabel" Grid.Column="5" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Width="130" Height="18" Foreground="#DDFFFFFF" FontSize="8" FontWeight="Bold" Margin="0,11,0,0"/>
+        <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Left" Foreground="White"
+               TextBlock.FontWeight="Medium" VerticalAlignment="Top" Grid.Column="4"
+               PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="47,9,0,0" Height="22" FontSize="11" Grid.ColumnSpan="2" />
         <tb:TaskbarIcon
             IconSource="/img/icon.ico"
             ToolTipText="Atlas Launcher" 
