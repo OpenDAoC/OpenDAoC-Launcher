@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Globalization;
 using Serilog;
+using System.Threading;
+using System.Text;
+using System.Net.Http.Headers;
 
 namespace WPFLauncher
 {
@@ -28,7 +31,28 @@ namespace WPFLauncher
         private Updater updater = new Updater();
         private bool updating = false;
 
+        private Timer _timer;
+        private HttpClient _httpClient = new HttpClient();
+
         private Serilog.Core.Logger log;
+
+        public class QueueJoinResponse
+        {
+            public bool success { get; set; }
+            public bool queued { get; set; }
+            public bool whitelisted { get; set; }
+            public bool queue_bypass { get; set; }
+            public int position { get; set; }
+            public string account { get; set; } = "";
+            public string error { get; set; } = "";
+        }
+
+        public class QueuePositionResponse
+        {
+            public bool success { get; set; }
+            public int position { get; set; }
+            public string error { get; set; } = "";
+        }
 
         public MainWindow()
         {
@@ -84,6 +108,7 @@ namespace WPFLauncher
         {
             try
             {
+                EnableAccountCredentials(false);
                 _updateAvailable = await updater.CheckForNewVersionAsync();
                 if (_updateAvailable)
                 {
@@ -102,16 +127,18 @@ namespace WPFLauncher
                     PlayButton.IsEnabled = true;
                     SetButtonGradients(0.0);
                     PatchProgressLabel.Content = "";
+                    EnableAccountCredentials(true);
                 }
                 else
                 {
                     if (await getDiscordStatus(UsernameBox.Text))
                     {
-                        Play();
+                        _ = CheckQueueAsync();
                     }
                     else
                     {
                         promptDiscord();
+                        EnableAccountCredentials(true);
                     }
 
                 }
@@ -119,6 +146,7 @@ namespace WPFLauncher
             catch (Exception ex)
             {
                 log.Error(ex, "Error starting DAOC");
+                EnableAccountCredentials(true);
             }            
         }
         
@@ -338,6 +366,136 @@ namespace WPFLauncher
             Environment.Exit(0);
         }
 
+        private void EnableAccountCredentials(bool enabled)
+        {
+            PlayButton.FontSize = 18;
+            PlayButton.IsEnabled = enabled;
+            PlayButton.IsHitTestVisible = enabled;
+            UsernameBox.IsReadOnly = !enabled;
+            PasswordBox.IsEnabled = enabled;
+            QuickloginCombo.IsReadOnly = !enabled;
+            QuickloginCombo.IsHitTestVisible = enabled;
+        }
+
+        private async Task CheckQueueAsync()
+        {
+            if (!CheckUserPass()) return;
+
+            EnableAccountCredentials(false);
+            
+
+            var data = new Dictionary<string, string>()
+            {
+                { "name", UsernameBox.Text },
+                { "password", PasswordBox.Password }
+            };
+            var jsonData = JsonConvert.SerializeObject(data);
+            var contentData = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+            _httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+            var response = await _httpClient.PostAsync(Constants.QueueApiIP + "/api/v1/queue/join", contentData);
+            var dataAsString = await response.Content.ReadAsStringAsync();
+            QueueJoinResponse queueJoin = JsonConvert.DeserializeObject<QueueJoinResponse>(dataAsString);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                MessageBox.Show(Constants.MessageInvalidCredentials);
+                EnableAccountCredentials(true);
+                return;
+            }
+            else if (!queueJoin.success && !string.IsNullOrEmpty(queueJoin.error))
+            {
+                MessageBox.Show(Constants.MessageQueueError);
+                EnableAccountCredentials(true);
+                return;
+            }
+
+            if (queueJoin.success && queueJoin.queued)
+            {
+                PlayButton.Content = "Position: " + queueJoin.position;
+                PlayButton.FontSize = 14;
+                StartPollingQueuePosition(UsernameBox.Text);
+            } else if (queueJoin.success && (queueJoin.whitelisted || queueJoin.queue_bypass))
+            {
+                PlayButton.Content = "Joining...";
+                EnableAccountCredentials(true);
+                Play();
+            }
+            return;
+        }
+
+        private void StopPollingQueuePosition()
+        {
+            var success = _timer.Change(Timeout.Infinite, Timeout.Infinite);
+            _timer.Dispose();
+        }
+
+        private void StartPollingQueuePosition(string accountName)
+        {
+
+            _timer = new Timer(async (state) =>
+            {
+                try
+                {
+                    var data = new Dictionary<string, string>()
+                    {
+                        { "name", accountName }
+                    };
+                    var jsonData = JsonConvert.SerializeObject(data);
+                    var contentData = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                    var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    _httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+                    var response = await _httpClient.PostAsync(Constants.QueueApiIP + "/api/v1/queue", contentData);
+                    var dataAsString = await response.Content.ReadAsStringAsync();
+                    QueuePositionResponse queuePosition = JsonConvert.DeserializeObject<QueuePositionResponse>(dataAsString);
+
+                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        MessageBox.Show(Constants.MessageNotInQueue);
+
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            EnableAccountCredentials(true);
+                            StopPollingQueuePosition();
+                        }));
+                    }
+                    else if (response.StatusCode == HttpStatusCode.InternalServerError)
+                    {
+                        MessageBox.Show(Constants.MessageQueueError);
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            EnableAccountCredentials(true);
+                            StopPollingQueuePosition();
+                        }));
+                    }
+                    else if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        if (queuePosition.position == 0)
+                        {
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                PlayButton.Content = "Joining...";
+                                Play();
+                                EnableAccountCredentials(true);
+                                StopPollingQueuePosition();
+                            }));
+                        }
+                        else
+                        {
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                PlayButton.Content = "Position: " + queuePosition.position.ToString();
+                            }));
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+            }, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(10));
+        }
+
         private void Play()
         {
             if (!CheckUserPass()) return;
@@ -403,6 +561,8 @@ namespace WPFLauncher
             var command = "connect.exe game1127.dll " + serverIP + " " + UsernameBox.Text + " " + PasswordBox.Password +
                           " " + quickSelection;
             StartAtlas(command);
+            PlayButton.Content = "Play";
+            EnableAccountCredentials(true);
         }
 
         private static void StartAtlas(string command)
