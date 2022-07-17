@@ -413,7 +413,7 @@ namespace WPFLauncher
             if (queueJoin.success && queueJoin.queued)
             {
                 PlayButton.Content = "Position: " + queueJoin.position;
-                PlayButton.FontSize = 14;
+                //PlayButton.FontSize = 14;
                 StartPollingQueuePosition(UsernameBox.Text);
             } else if (queueJoin.success && (queueJoin.whitelisted || queueJoin.queue_bypass))
             {
