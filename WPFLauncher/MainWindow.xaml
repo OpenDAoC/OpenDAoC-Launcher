@@ -5,46 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
-        Title="DEBUG: QUEUE: A0: Atlas Launcher" Height="300" Width="500" ResizeMode="CanMinimize" WindowStyle="SingleBorderWindow"
+        Title="Atlas Launcher" Height="300" Width="500" ResizeMode="CanMinimize" WindowStyle="SingleBorderWindow"
         HorizontalAlignment="Stretch" Icon="/img/icon.ico">
 
 
-    <Grid MouseDown="GridBread_MouseDown" Height="300">
+    <Grid MouseDown="GridBread_MouseDown" Margin="-1,0,0,-12">
 
         <Grid.Background>
             <ImageBrush ImageSource="/img/home-bg.png" Stretch="UniformToFill" />
         </Grid.Background>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
 
-            <ColumnDefinition Width="11*" />
-            <ColumnDefinition Width="48*"/>
-            <ColumnDefinition Width="59*" />
-            <ColumnDefinition Width="59*" />
-            <ColumnDefinition Width="118*" />
-            <ColumnDefinition Width="206*" />
+            <ColumnDefinition Width="0*" />
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="60*" />
+            <ColumnDefinition Width="60*" />
+            <ColumnDefinition Width="80*" />
+            <ColumnDefinition Width="150*" />
 
         </Grid.ColumnDefinitions>
-        <Button x:Name="OptionsButton" Grid.Column="5" Content="OPTIONS" HorizontalAlignment="Right"
-                VerticalAlignment="Top" Margin="0,10,15,0" Height="20" Width="80" Background="{x:Null}"
-                Foreground="LightGray" BorderBrush="Gray" TextBlock.FontSize="8" Click="OptionsButton_Click" />
-        <Button x:Name="RegisterButton" Grid.Column="5" Content="REGISTER" HorizontalAlignment="Right"
-                VerticalAlignment="Top" Padding="1" Margin="0,10,105,0" Height="20" Width="80" Background="{x:Null}"
-                Foreground="LightGreen" BorderBrush="LightGreen" TextBlock.FontSize="10" Click="RegisterButton_Click"
-                Grid.Row="0" />
-        <TextBox x:Name="UsernameBox" Grid.Column="5" Grid.Row="0" TextWrapping="Wrap" Foreground="White"
-                 CaretBrush="White" Height="25" TextBlock.FontSize="12" Width="130" Margin="38,80,38,120" TextAlignment="Left" />
-        <Label x:Name="UsernameLabel" Grid.Column="4" Grid.Row="0" Content="Account" Foreground="White" Height="25"
-               HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,74,0,114" />
-        <PasswordBox x:Name="PasswordBox" Grid.Column="5" Grid.Row="0" Foreground="White" CaretBrush="White"
-                     Height="25" Width="130" HorizontalAlignment="Center" TextBlock.FontSize="12" Margin="0,105,0,95" />
-        <Label x:Name="PasswordLabel" Grid.Column="4" Grid.Row="0" Content="Password" Foreground="White" Height="25"
-               HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,99,0,89" />
-        <ComboBox x:Name="QuickloginCombo" Grid.Column="5" Grid.Row="0" Foreground="White" Height="25" Width="130"
-                  HorizontalAlignment="Center" TextBlock.FontSize="12" Margin="0,133,0,0" VerticalAlignment="Top">
+        <Button x:Name="OptionsButton" Grid.Column="5" Content="OPTIONS" HorizontalAlignment="Left"
+                VerticalAlignment="Center" Margin="90,0,0,0" Height="20" Width="80" Background="{x:Null}"
+                Foreground="LightGray" BorderBrush="Gray" TextBlock.FontSize="10" Click="OptionsButton_Click" />
+        <Button x:Name="RegisterButton" Grid.Column="5" Content="REGISTER" HorizontalAlignment="Left"
+                VerticalAlignment="Center" Padding="1" Margin="0,0,0,0" Height="20" Width="80" Background="{x:Null}"
+                Foreground="LightGreen" BorderBrush="LightGreen" TextBlock.FontSize="10" Click="RegisterButton_Click" />
+        <Button x:Name="PatchButton" Grid.Column="4" Content="PATCH NOTES" HorizontalAlignment="Left"
+                VerticalAlignment="Center" Padding="1" Margin="5,0,0,0" Height="20" Width="80" Background="{x:Null}"
+                Foreground="LightGray" BorderBrush="Gray" TextBlock.FontSize="10" Click="PatchButton_PreviewMouseDown" />
+        <TextBox x:Name="UsernameBox" Grid.Column="5" Grid.Row="1" TextWrapping="Wrap" Foreground="White"
+                 CaretBrush="White" TextBlock.FontSize="12"  TextAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" Width="140" Height="24"/>
+        <Label x:Name="UsernameLabel" Grid.Column="4" Grid.Row="1" Content="Account" Foreground="White"
+                TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Width="54" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="24" Grid.ColumnSpan="2" Margin="0,0,183,0" />
+        <PasswordBox x:Name="PasswordBox" Grid.Column="5" Grid.Row="2" Foreground="White" CaretBrush="White"
+                     Width="140" TextBlock.FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Height="24"/>
+        <Label x:Name="PasswordLabel" Grid.Column="4" Grid.Row="2" Content="Password" Foreground="White"
+                TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Width="61" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="24" Grid.ColumnSpan="2" Margin="0,0,183,0" />
+        <ComboBox x:Name="QuickloginCombo" Grid.Column="5" Grid.Row="3" Foreground="White" Height="26" Width="140"
+                  HorizontalAlignment="Center" TextBlock.FontSize="12">
             <ComboBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ComboBoxItem}">
                     <Setter Property="Foreground" Value="Black" />
@@ -54,27 +62,26 @@
                 </Style>
             </ComboBox.ItemContainerStyle>
         </ComboBox>
-        <Label x:Name="QuickloginLabel" Grid.Column="4" Grid.Row="0" Content="Character" Foreground="White" Height="25"
-               HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,127,0,61" />
-        <Image x:Name="AlbIcon" Grid.Row="0" Grid.Column="1" Height="40" Source="/img/alb.png"
-               Stretch="Uniform" Margin="19,192,34,68" Grid.ColumnSpan="2" Grid.RowSpan="2" />
-        <Label x:Name="AlbLabel" Grid.Row="1" Grid.Column="1" Width="40"
-               HorizontalContentAlignment="Center" Content="N/A" Foreground="Red" Height="25"
-               HorizontalAlignment="Left" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="26,7,0,43" Grid.ColumnSpan="2" />
-        <Image x:Name="MidIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2" Height="40"
-               Source="/img/mid.png" Stretch="Uniform" Margin="33,192,36,68" />
-        <Label x:Name="MidLabel" Grid.Row="1" Grid.Column="2" Width="40"
-               HorizontalContentAlignment="Center" Content="N/A" Foreground="DodgerBlue" Height="25"
-               HorizontalAlignment="Left" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="37,7,0,43" Grid.ColumnSpan="2" />
-        <Image x:Name="HibIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" Height="40"
-               Source="/img/hib.png" Stretch="Uniform" Margin="25,192,86,68" Grid.ColumnSpan="2" />
-        <Label x:Name="HibLabel" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Width="40"
-               HorizontalContentAlignment="Center" Content="N/A" Foreground="LimeGreen" Height="25"
-               HorizontalAlignment="Left" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="38,7,0,43" />
-        <Button x:Name="PlayButton" Grid.Column="5" Grid.Row="0" Content="Play" HorizontalAlignment="Center"
+        <Label x:Name="QuickloginLabel" Grid.Column="4" Grid.Row="3" Content="Character" Foreground="White" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="62" Height="24" Grid.ColumnSpan="2" Margin="0,0,183,0" />
+        <Image x:Name="AlbIcon" Grid.Row="6" Grid.Column="1" Source="/img/alb.png"
+               Stretch="Uniform"/>
+        <Label x:Name="AlbLabel" Grid.Row="8" Grid.Column="1" Width="40"
+               HorizontalContentAlignment="Center" Content="N/A" Foreground="Red"
+               HorizontalAlignment="Center" VerticalAlignment="Top" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Height="24" />
+        <Image x:Name="MidIcon" Grid.Row="6" Grid.Column="1"
+               Source="/img/mid.png" Stretch="Uniform" Grid.ColumnSpan="3" Margin="73,0,73,0" />
+        <Label x:Name="MidLabel" Grid.Row="8" Grid.Column="2" Width="40"
+               HorizontalContentAlignment="Center" Content="N/A" Foreground="DodgerBlue"
+               VerticalAlignment="Top" HorizontalAlignment="Center" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Height="24" />
+        <Image x:Name="HibIcon" Grid.Row="6" Grid.Column="3"
+               Source="/img/hib.png" Stretch="Uniform" Grid.ColumnSpan="2" Margin="0,0,98,0" />
+        <Label x:Name="HibLabel" Grid.Row="8" Grid.Column="3" Width="40"
+               HorizontalContentAlignment="Center" Content="N/A" Foreground="LimeGreen"
+               HorizontalAlignment="Center" VerticalAlignment="Top" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Height="24" />
+        <Button x:Name="PlayButton" Grid.Column="5" Grid.Row="6" Content="Play" HorizontalAlignment="Center" VerticalAlignment="Center"
                 TextBlock.FontSize="18" TextBlock.FontWeight="bold"
-                Margin="0,187,0,68" Width="130" Height="45" Click="PlayButton_Click" ClickMode="Release"
-                IsDefault="True" Grid.RowSpan="2" RenderTransformOrigin="0.5,0.5" >
+                Width="140" Click="PlayButton_Click" ClickMode="Release"
+                IsDefault="True" RenderTransformOrigin="0.5,0.5" Height="44" Grid.RowSpan="2" >
             <Button.Foreground>
                 <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
                     <GradientStop Color="Black"/>
@@ -92,14 +99,11 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
-        <Label x:Name="PatchProgressLabel" Grid.Column="5" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Width="130" Height="18" Foreground="#DDFFFFFF" FontSize="8" FontWeight="Bold" Margin="0,11,0,0"/>
-        <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Left" Foreground="White"
-               TextBlock.FontWeight="Medium" VerticalAlignment="Top" Grid.Column="4"
-               PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="47,8,0,0" Height="22" FontSize="11" Grid.ColumnSpan="2" />
+        <Label x:Name="PatchProgressLabel" Grid.Column="5" Grid.Row="6" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Center" VerticalAlignment="Center" Width="130" Height="18" Foreground="#DDFFFFFF" FontSize="8" FontWeight="Bold" Grid.RowSpan="2"/>
         <tb:TaskbarIcon
             IconSource="/img/icon.ico"
             ToolTipText="Atlas Launcher" 
-            TrayLeftMouseDown="TaskbarIcon_OnTrayLeftMouseDown" Grid.ColumnSpan="2" Margin="4,2,5,161" Width="50" Height="50" />
+            TrayLeftMouseDown="TaskbarIcon_OnTrayLeftMouseDown" Grid.ColumnSpan="2" Margin="4,8,55,25" />
 
     </Grid>
 </Window>

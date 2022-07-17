@@ -81,7 +81,7 @@ namespace WPFLauncher
             log.Information("Initializing settings");
 
             ShowInTaskbar = true;
-            LauncherWindow.Title = "DEBUG: QUEUE: A0: Atlas Launcher v" + Constants.LauncherVersion;
+            LauncherWindow.Title = "Atlas Launcher v" + Constants.LauncherVersion;
             if (Settings.Default.Username != "") UsernameBox.Text = Settings.Default.Username;
             if (Settings.Default.Password != "") PasswordBox.Password = Settings.Default.Password;
             if (Settings.Default.QuickCharacter != "") QuickloginCombo.Text = Settings.Default.QuickCharacter;
@@ -665,7 +665,7 @@ namespace WPFLauncher
             new OptionsWindow().ShowDialog();
         }
 
-        private void PatchButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void PatchButton_PreviewMouseDown(object sender, RoutedEventArgs e)
         {
             Process.Start(Constants.PatchNotesUrl);
         }
