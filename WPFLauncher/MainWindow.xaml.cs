@@ -126,7 +126,7 @@ namespace WPFLauncher
                     PlayButton.Content = !(await updater.CheckForNewVersionAsync()) ? "Play" : "Update";
                     PlayButton.IsEnabled = true;
                     SetButtonGradients(0.0);
-                    PatchProgressLabel.Content = "";
+                    PlayButton.Content = "";
                     EnableAccountCredentials(true);
                 }
                 else
@@ -214,7 +214,7 @@ namespace WPFLauncher
             //return;
 
             this.Dispatcher.Invoke(() => {
-                PatchProgressLabel.Content = "Checking existing files";
+                PlayButton.Content = "Checking existing files";
             });
 
             var patchlist = await updater.GetPatchlistAsync();
@@ -249,7 +249,7 @@ namespace WPFLauncher
                         var percent = Math.Round(100 * ((double)currentFile / totalFiles), 2);
                         this.Dispatcher.Invoke(() => {
                             PlayButton.Content = $"{percent}%";
-                            PatchProgressLabel.Content = $"{currentFile} / {totalFiles}";
+                            PlayButton.Content = $"{currentFile} / {totalFiles}";
                             SetButtonGradients(((double)currentFile / totalFiles));
                         });
                     }
@@ -281,7 +281,7 @@ namespace WPFLauncher
                     var ratio = i / (double)maxCnt;
                     PlayButton.Content = $"{ratio * 100}%";
                     SetButtonGradients(ratio);
-                    PatchProgressLabel.Content = $"{i} / {maxCnt}";
+                    PlayButton.Content = $"{i} / {maxCnt}";
                 });
 
                 System.Threading.Thread.Sleep(20);
@@ -359,7 +359,6 @@ namespace WPFLauncher
 
         private void EnableAccountCredentials(bool enabled)
         {
-            PlayButton.FontSize = 18;
             PlayButton.IsEnabled = enabled;
             PlayButton.IsHitTestVisible = enabled;
             UsernameBox.IsReadOnly = !enabled;
@@ -413,7 +412,6 @@ namespace WPFLauncher
             if (queueJoin.success && queueJoin.queued)
             {
                 PlayButton.Content = "Position: " + queueJoin.position;
-                //PlayButton.FontSize = 14;
                 StartPollingQueuePosition(UsernameBox.Text);
             } else if (queueJoin.success && (queueJoin.whitelisted || queueJoin.queue_bypass))
             {
