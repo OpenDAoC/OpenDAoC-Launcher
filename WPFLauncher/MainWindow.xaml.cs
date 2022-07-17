@@ -109,7 +109,7 @@ namespace WPFLauncher
             try
             {
                 EnableAccountCredentials(false);
-                /*_updateAvailable = await updater.CheckForNewVersionAsync();*/
+                _updateAvailable = await updater.CheckForNewVersionAsync();
                 if (_updateAvailable)
                 {
                     PlayButton.Content = _updateAvailable ? "Checking.." : "Play";
@@ -205,7 +205,7 @@ namespace WPFLauncher
         private async void RefreshCount(object sender, EventArgs e)
         {
             GetPlayerCount();
-            /*await CheckVersion();*/
+            await CheckVersion();
         }
 
         private async Task UpdateFiles()
@@ -213,8 +213,10 @@ namespace WPFLauncher
             //TestProgress();
             //return;
 
-            this.Dispatcher.Invoke(() => {
-                PlayButton.Content = "Checking existing files";
+            this.Dispatcher.Invoke(() =>
+            {
+                PlayButton.FontSize = 14;
+                PlayButton.Content = "Checking..";
             });
 
             var patchlist = await updater.GetPatchlistAsync();

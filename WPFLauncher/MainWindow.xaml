@@ -99,7 +99,6 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
-        <Label x:Name="PatchProgressLabel" Grid.Column="5" Grid.Row="6" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Center" VerticalAlignment="Center" Width="130" Height="18" Foreground="#DDFFFFFF" FontSize="8" FontWeight="Bold" Grid.RowSpan="2"/>
         <tb:TaskbarIcon
             IconSource="/img/icon.ico"
             ToolTipText="Atlas Launcher" 
