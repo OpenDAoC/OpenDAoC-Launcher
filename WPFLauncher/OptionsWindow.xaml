@@ -17,7 +17,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Margin="1,1,1,1" />
-                <TextBlock x:Name="PTRToggleText" Text="OFF" HorizontalAlignment="Center" VerticalAlignment="Center"
+                <TextBlock x:Name="TitanToggleText" Text="OFF" HorizontalAlignment="Center" VerticalAlignment="Center"
                            TextBlock.FontWeight="Bold" Foreground="LightGray" />
             </Grid>
             <ControlTemplate.Triggers>
@@ -26,8 +26,8 @@
                     <Setter Property="Source"
                             TargetName="ExpandImage"
                             Value="/img/button-pressed.png" />
-                    <Setter Property="Foreground" TargetName="PTRToggleText" Value="White" />
-                    <Setter Property="Text" TargetName="PTRToggleText" Value="ON" />
+                    <Setter Property="Foreground" TargetName="TitanToggleText" Value="White" />
+                    <Setter Property="Text" TargetName="TitanToggleText" Value="ON" />
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
@@ -69,9 +69,9 @@
                    Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" />
         <ToggleButton x:Name="TrayButton" Grid.Row="3" Grid.Column="2" Style="{StaticResource OnOffButtonStyle}"
                       BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" />
-        <TextBlock x:Name="PTRText" Grid.Row="4" Grid.Column="1" Text="Connect to PTR" TextBlock.FontWeight="Bold"
+        <TextBlock x:Name="TitanText" Grid.Row="4" Grid.Column="1" Text="Connect to Titan" TextBlock.FontWeight="Bold"
                    Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <ToggleButton x:Name="PTRButton" Grid.Row="4" Grid.Column="2" Style="{StaticResource OnOffButtonStyle}"
+        <ToggleButton x:Name="TitanButton" Grid.Row="4" Grid.Column="2" Style="{StaticResource OnOffButtonStyle}"
                       BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" />
 
 

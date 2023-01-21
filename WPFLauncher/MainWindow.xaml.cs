@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -105,7 +104,7 @@ namespace WPFLauncher
                 }
                 else
                 {
-                    if (await getDiscordStatus(UsernameBox.Text))
+                    if (await getDiscordStatus(UsernameBox.Text) || !Constants.ForceDiscord)
                     {
                         Play();
                     }
@@ -185,7 +184,6 @@ namespace WPFLauncher
 
         private async void RefreshCount(object sender, EventArgs e)
         {
-            GetPlayerCount();
             await CheckVersion();
         }
 
@@ -398,7 +396,7 @@ namespace WPFLauncher
                 quickSelection = quickToon + " " + quickRealm;
             }
 
-            serverIP = Settings.Default.PTR ? Constants.PtrIP : Constants.LiveIP;
+            serverIP = Settings.Default.Titan ? Constants.TitanIP : Constants.LiveIP;
 
             var command = "connect.exe game1127.dll " + serverIP + " " + UsernameBox.Text + " " + PasswordBox.Password +
                           " " + quickSelection;
@@ -457,47 +455,6 @@ namespace WPFLauncher
             quickCharacters.Add("");
 
             QuickloginCombo.ItemsSource = quickCharacters.Distinct();
-        }
-
-        private void GetPlayerCount()
-        {
-            try
-            {
-                var webRequest = WebRequest.Create("https://api.atlasfreeshard.com/stats") as HttpWebRequest;
-
-                if (webRequest == null) return;
-                webRequest.ContentType = "application/json";
-                webRequest.UserAgent = "Nothing";
-
-                var response = webRequest.GetResponse();
-
-                using (var s = response.GetResponseStream())
-                {
-                    using (var sr = new StreamReader(s))
-                    {
-                        var jsonStats = sr.ReadToEnd();
-                        var stats = JsonConvert.DeserializeObject<Stats>(jsonStats);
-                        if (stats != null && stats.Albion < 10)
-                            AlbLabel.Content = "0" + stats.Albion;
-                        else
-                            AlbLabel.Content = stats?.Albion.ToString();
-                        if (stats != null && stats.Midgard < 10)
-                            MidLabel.Content = "0" + stats.Midgard;
-                        else
-                            MidLabel.Content = stats?.Midgard.ToString();
-                        if (stats != null && stats.Hibernia < 10)
-                            HibLabel.Content = "0" + stats.Hibernia;
-                        else
-                            HibLabel.Content = stats?.Hibernia.ToString();
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                AlbLabel.Content = "N/A";
-                MidLabel.Content = "N/A";
-                HibLabel.Content = "N/A";
-            }
         }
 
         private void OptionsButton_Click(object sender, RoutedEventArgs e)

@@ -2,7 +2,9 @@
 {
     internal class Constants
     {
-        public const string LauncherVersion = "1.0.7";
+        public const string LauncherVersion = "1.0.8";
+        
+        public const bool ForceDiscord = true;
 
         #region Patcher
 
@@ -21,8 +23,8 @@
 
         #region gameserver
 
-        public const string LiveIP = "play.atlasfreeshard.com";
-        public const string PtrIP = "ptr.atlasfreeshard.com";
+        public const string LiveIP = "play.atlasfreeshard.com:10300";
+        public const string TitanIP = "play.atlasfreeshard.com:10350";
 
         #endregion
 

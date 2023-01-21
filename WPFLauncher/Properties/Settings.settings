@@ -11,7 +11,7 @@
     <Setting Name="Password" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="PTR" Type="System.Boolean" Scope="User">
+    <Setting Name="Titan" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="KeepOpen" Type="System.Boolean" Scope="User">

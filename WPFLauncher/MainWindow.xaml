@@ -55,21 +55,6 @@
         </ComboBox>
         <Label x:Name="QuickloginLabel" Grid.Column="3" Grid.Row="0" Content="Character" Foreground="White" Height="25"
                HorizontalAlignment="Right" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="0,65,0,0" />
-        <Image x:Name="AlbIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Height="40" Source="/img/alb.png"
-               Stretch="Uniform" Margin="5,115,0,0" />
-        <Label x:Name="AlbLabel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Width="40"
-               HorizontalContentAlignment="Center" Content="N/A" Foreground="Red" Height="25"
-               HorizontalAlignment="Center" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="4,180,0,0" />
-        <Image x:Name="MidIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Height="40"
-               Source="/img/mid.png" Stretch="Uniform" Margin="5,109,0,0" />
-        <Label x:Name="MidLabel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Width="40"
-               HorizontalContentAlignment="Center" Content="N/A" Foreground="DodgerBlue" Height="25"
-               HorizontalAlignment="Center" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="5,180,0,0" />
-        <Image x:Name="HibIcon" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2" Height="40"
-               Source="/img/hib.png" Stretch="Uniform" Margin="5,116,0,0" />
-        <Label x:Name="HibLabel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2" Width="40"
-               HorizontalContentAlignment="Center" Content="N/A" Foreground="LimeGreen" Height="25"
-               HorizontalAlignment="Center" TextBlock.FontSize="12" TextBlock.FontWeight="Bold" Margin="10,180,0,0" />
         <Button x:Name="PlayButton" Grid.Column="4" Grid.Row="0" Content="Play" HorizontalAlignment="Center"
                 TextBlock.FontSize="18" TextBlock.FontWeight="bold"
                 Margin="0,125,0,17" Width="130" Height="45" Click="PlayButton_Click" ClickMode="Release"
