@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
-        Title="Atlas Launcher" Height="250" Width="400" ResizeMode="CanMinimize" WindowStyle="SingleBorderWindow"
+        Title="OpenDAoC Launcher" Height="250" Width="400" ResizeMode="CanMinimize" WindowStyle="SingleBorderWindow"
         HorizontalAlignment="Stretch" Icon="/img/icon.ico">
 
 
@@ -77,13 +77,9 @@
             </Button.Background>
         </Button>
         <Label x:Name="PatchProgressLabel" Grid.Column="4" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Width="130" Height="18" Foreground="#DDFFFFFF" FontSize="8" FontWeight="Bold" Margin="0,3,0,0"/>
-        <Label x:Name="PatchButton" Content="PATCH NOTES" HorizontalAlignment="Center" Foreground="White"
-               TextBlock.FontWeight="Medium" VerticalAlignment="Top" Grid.Row="1" Grid.Column="4"
-               PreviewMouseDown="PatchButton_PreviewMouseDown" Cursor="Hand" Margin="0,34,0,0" Height="22" FontSize="11" />
         <tb:TaskbarIcon
             IconSource="/img/icon.ico"
-            ToolTipText="Atlas Launcher" 
+            ToolTipText="OpenDAoC Launcher" 
             TrayLeftMouseDown="TaskbarIcon_OnTrayLeftMouseDown" />
-        
     </Grid>
 </Window>

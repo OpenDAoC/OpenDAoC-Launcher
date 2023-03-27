@@ -8,7 +8,6 @@ using System.Net.Http;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
-using Newtonsoft.Json;
 using WPFLauncher.Properties;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -56,7 +55,7 @@ namespace WPFLauncher
             log.Information("Initializing settings");
 
             ShowInTaskbar = true;
-            LauncherWindow.Title = "Atlas Launcher v" + Constants.LauncherVersion;
+            LauncherWindow.Title = "OpenDAoC Launcher v" + Constants.LauncherVersion;
             if (Settings.Default.Username != "") UsernameBox.Text = Settings.Default.Username;
             if (Settings.Default.Password != "") PasswordBox.Password = Settings.Default.Password;
             if (Settings.Default.QuickCharacter != "") QuickloginCombo.Text = Settings.Default.QuickCharacter;
@@ -67,7 +66,7 @@ namespace WPFLauncher
 
         private void InitializeLogger()
         {
-            log = new LoggerConfiguration().WriteTo.File("logs/AtlasLauncher-.txt", rollingInterval: RollingInterval.Day).CreateLogger();
+            log = new LoggerConfiguration().WriteTo.File("logs/OpenDAoCLauncher-.txt", rollingInterval: RollingInterval.Day).CreateLogger();
         }
 
         private async Task CheckVersion()
@@ -104,20 +103,26 @@ namespace WPFLauncher
                 }
                 else
                 {
-                    if (await getDiscordStatus(UsernameBox.Text) || !Constants.ForceDiscord)
+                    if (isDiscordRequired() && !Constants.DisableDiscordCheck)
                     {
-                        Play();
+                        if (await getDiscordStatus(UsernameBox.Text) )
+                        {
+                            Play();
+                        }
+                        else
+                        {
+                            promptDiscord();
+                        }
                     }
                     else
                     {
-                        promptDiscord();
+                        Play();
                     }
-
                 }
             }
             catch (Exception ex)
             {
-                log.Error(ex, "Error starting DAOC");
+                log.Error(ex, "Error starting DAoC");
             }            
         }
         
@@ -221,7 +226,7 @@ namespace WPFLauncher
                     try
                     {
                         var data = await _httpClient.GetByteArrayAsync(Constants.RemoteFilePath + file.FileName);
-                        if (file.FileName.Contains("AtlasLauncher")) updateSelf = true;
+                        if (file.FileName.Contains("OpenDAoCLauncher")) updateSelf = true;
                         new FileInfo(file.FileName).Directory?.Create();
                         File.WriteAllBytes(file.FileName, data);
 
@@ -318,17 +323,17 @@ namespace WPFLauncher
         {
             var self = Assembly.GetExecutingAssembly().Location;
 
-            using (var batFile = new StreamWriter(File.Create("AtlasLauncherUpdate.bat")))
+            using (var batFile = new StreamWriter(File.Create("OpenDAoCLauncherUpdate.bat")))
             {
                 batFile.WriteLine("@ECHO OFF");
                 batFile.WriteLine("TIMEOUT /t 1 /nobreak > NUL");
-                batFile.WriteLine("TASKKILL /IM \"{0}\" > NUL", "AtlasLauncher.exe");
-                batFile.WriteLine("MOVE \"{0}\" \"{1}\"", Constants.LauncherUpdaterName, "AtlasLauncher.exe");
+                batFile.WriteLine("TASKKILL /IM \"{0}\" > NUL", "OpenDAoCLauncher.exe");
+                batFile.WriteLine("MOVE \"{0}\" \"{1}\"", Constants.LauncherUpdaterName, "OpenDAoCLauncher.exe");
                 batFile.WriteLine("DEL \"{0}\"", Constants.LauncherUpdaterName);
                 batFile.WriteLine("DEL \"%~f0\" & START \"\" /B \"{0}\"", self);
             }
 
-            var startInfo = new ProcessStartInfo("AtlasLauncherUpdate.bat");
+            var startInfo = new ProcessStartInfo("OpenDAoCLauncherUpdate.bat");
             startInfo.CreateNoWindow = true;
             startInfo.UseShellExecute = false;
             Process.Start(startInfo);
@@ -400,17 +405,17 @@ namespace WPFLauncher
 
             var command = "connect.exe game1127.dll " + serverIP + " " + UsernameBox.Text + " " + PasswordBox.Password +
                           " " + quickSelection;
-            StartAtlas(command);
+            StartOpenDAoC(command);
         }
 
-        private static void StartAtlas(string command)
+        private static void StartOpenDAoC(string command)
         {
             ProcessStartInfo ProcessInfo;
-            Process AtlasProcess;
+            Process OpenDAoCProcess;
             ProcessInfo = new ProcessStartInfo("cmd.exe", "/K " + command);
             ProcessInfo.WindowStyle = ProcessWindowStyle.Hidden;
             ProcessInfo.UseShellExecute = true;
-            AtlasProcess = Process.Start(ProcessInfo);
+            OpenDAoCProcess = Process.Start(ProcessInfo);
 
             if (!Settings.Default.KeepOpen) Environment.Exit(0);
         }
@@ -462,11 +467,6 @@ namespace WPFLauncher
             new OptionsWindow().ShowDialog();
         }
 
-        private void PatchButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Process.Start(Constants.PatchNotesUrl);
-        }
-
         private void GridBread_MouseDown(object sender, MouseButtonEventArgs e)
         {
             BreadClicks++;
@@ -516,12 +516,5 @@ namespace WPFLauncher
             WindowState = WindowState.Normal;
             Show();
         }
-    }
-
-    internal class Stats
-    {
-        public int Albion { get; set; }
-        public int Midgard { get; set; }
-        public int Hibernia { get; set; }
     }
 }

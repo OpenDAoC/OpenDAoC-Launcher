@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AtlasPatcher.Lister.Properties {
+namespace OpenDAoCPatcher.Lister.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

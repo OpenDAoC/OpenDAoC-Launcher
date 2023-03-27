@@ -5,13 +5,13 @@ using System.Security.Cryptography;
 using System.Windows.Forms;
 using Cyclic.Redundancy.Check;
 
-namespace AtlasPatcher.Lister
+namespace OpenDAoCPatcher.Lister
 {
     public partial class lForm : Form
     {
         string[] Files;
 
-        private string PatchFilesURL = "https://patch.atlasfreeshard.com/atlaspack/";
+        private string PatchFilesURL = "https://patch.OpenDAoCfreeshard.com/OpenDAoCpack/";
 
         public lForm()
         {

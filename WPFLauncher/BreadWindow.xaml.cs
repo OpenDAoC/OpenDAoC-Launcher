@@ -17,7 +17,7 @@ namespace WPFLauncher
         {
             try
             {
-                var webRequest = WebRequest.Create("https://api.atlasfreeshard.com/bread") as HttpWebRequest;
+                var webRequest = WebRequest.Create("https://api.OpenDAoCfreeshard.com/bread") as HttpWebRequest;
 
                 webRequest.ContentType = "application/json";
                 webRequest.UserAgent = "Nothing";

@@ -1,4 +1,4 @@
-﻿namespace AtlasPatcher.Lister
+﻿namespace OpenDAoCPatcher.Lister
 {
     partial class lForm
     {
