@@ -13,9 +13,9 @@
         public const string UserPath = "\\Electronic Arts\\Dark Age of Camelot\\OpenDAoC\\user.dat";
         
         public const string
-            RemoteVersionUrl = "https://patch.opendaoc.com/version-new.txt";
+            RemoteVersionUrl = "https://patch.opendaoc.com/version.txt";
         public const string
-            RemoteFileList = "https://patch.opendaoc.com/patchlist-new.txt"; 
+            RemoteFileList = "https://patch.opendaoc.com/patchlist.txt"; 
         
         public static string RemoteFilePath;
         
