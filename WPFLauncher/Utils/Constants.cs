@@ -2,7 +2,7 @@
 {
     internal class Constants
     {
-        public const string LauncherVersion = "1.0.9";
+        public const string LauncherVersion = "1.1.0";
         
         public const bool DisableDiscordCheck = false;
 
@@ -13,9 +13,9 @@
         public const string UserPath = "\\Electronic Arts\\Dark Age of Camelot\\OpenDAoC\\user.dat";
         
         public const string
-            RemoteVersionUrl = "https://patch.atlasfreeshard.com/version-new.txt";
+            RemoteVersionUrl = "https://patch.opendaoc.com/version-new.txt";
         public const string
-            RemoteFileList = "https://patch.atlasfreeshard.com/patchlist-new.txt"; 
+            RemoteFileList = "https://patch.opendaoc.com/patchlist-new.txt"; 
         
         public static string RemoteFilePath;
         
@@ -23,15 +23,15 @@
 
         #region gameserver
 
-        public const string LiveIP = "play.atlasfreeshard.com:10300";
-        public const string TitanIP = "play.atlasfreeshard.com:10350";
+        public const string LiveIP = "play.opendaoc.com:10300";
+        public const string TitanIP = "play.opendaoc.com:10350";
 
         #endregion
 
         #region Player Urls
 
-        public const string RegisterUrl = "https://account.atlasfreeshard.com/";
-        public const string LinkUrl = "https://account.atlasfreeshard.com/";
+        public const string RegisterUrl = "https://account.opendaoc.com/";
+        public const string LinkUrl = "https://account.opendaoc.com/";
 
         #endregion
         

@@ -131,7 +131,7 @@ namespace WPFLauncher
             
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync($"https://api.atlasfreeshard.com/utils/discordstatus/{accountName}");
+                var response = await httpClient.GetAsync($"https://api.opendaoc.com/utils/discordstatus/{accountName}");
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -146,7 +146,7 @@ namespace WPFLauncher
         {
             try
             {
-                var webRequest = WebRequest.Create("https://api.atlasfreeshard.com/utils/discordrequired") as HttpWebRequest;
+                var webRequest = WebRequest.Create("https://api.opendaoc.com/utils/discordrequired") as HttpWebRequest;
 
                 webRequest.ContentType = "application/json";
                 webRequest.UserAgent = "Nothing";
